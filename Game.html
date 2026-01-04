@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运大抽奖 - 图片版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* 奖品展示区域 */
+        .prize-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .prize-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        
+        .prize-item.selected {
+            border-color: #FFD700;
+            box-shadow: 0 0 25px #FFD700;
+            transform: scale(1.05);
+        }
+        
+        .prize-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.5s ease;
+        }
+        
+        .prize-item:hover .prize-image {
+            transform: rotateY(20deg);
+        }
+        
+        .prize-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .prize-probability {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* 控制面板 */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .result-display {
+            font-size: 1.8rem;
+            min-height: 60px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-image {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 10px;
+            display: none;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 160px;
+        }
+        
+        .start-btn {
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            color: white;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 75, 43, 0.4);
+        }
+        
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 中奖历史 */
+        .history {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .history-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .history-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .prize-container {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+        
+        /* 抽奖动画 */
+        @keyframes lotterySpin {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .lottery-spin {
+            animation: lotterySpin 0.5s ease infinite;
+        }
+        
+        /* 闪光效果 */
+        @keyframes sparkle {
+            0% { box-shadow: 0 0 5px #FFD700; }
+            50% { box-shadow: 0 0 25px #FFD700; }
+            100% { box-shadow: 0 0 5px #FFD700; }
+        }
+        
+        .sparkle {
+            animation: sparkle 1s ease infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎁 幸运大抽奖 🎁</h1>
+            <p class="subtitle">点击开始按钮，抽取你的专属幸运奖品！</p>
+        </div>
+        
+        <!-- 奖品展示区 -->
+        <div class="prize-container" id="prizeContainer">
+            <!-- 奖品将通过JavaScript动态生成 -->
+        </div>
+        
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="result-display" id="resultDisplay">
+                等待抽奖开始...
+            </div>
+            <img id="resultImage" class="result-image" alt="中奖奖品">
+            
+            <div class="controls">
+                <button class="btn start-btn" id="startBtn">🎰 开始抽奖</button>
+                <button class="btn reset-btn" id="resetBtn">🔄 重置记录</button>
+            </div>
+            
+            <div class="stats">
+                <p>剩余抽奖次数: <span id="remainingChances">3</span> 次</p>
+                <p>今日已抽: <span id="todayCount">0</span> 次</p>
+            </div>
+        </div>
+        
+        <!-- 中奖历史 -->
+        <div class="history">
+            <h3 class="history-title">📜 中奖历史记录</h3>
+            <div class="history-list" id="historyList">
+                <!-- 历史记录将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 奖品数据 - 你可以修改这里的图片和奖品信息
+        const prizes = [
+            {
+                id: 1,
+                name: "特等奖：iPhone 16",
+                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
+                probability: 5 // 中奖概率5%
+            },
+            {
+                id: 2,
+                name: "一等奖：iPad Pro",
+                image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w-400&h=400&fit=crop",
+                probability: 10
+            },
+            {
+                id: 3,
+                name: "二等奖：AirPods",
+                image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop",
+                probability: 15
+            },
+            {
+                id: 4,
+                name: "三等奖：智能手表",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+                probability: 20
+            },
+            {
+                id: 5,
+                name: "四等奖：蓝牙音箱",
+                image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=400&fit=crop",
+                probability: 25
+            },
+            {
+                id: 6,
+                name: "参与奖：优惠券",
+                image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400&h=400&fit=crop",
+                probability: 25
+            }
+        ];
+
+        // 状态变量
+        let isDrawing = false;
+        let remainingChances = 3;
+        let todayCount = 0;
+        let lotteryHistory = [];
+        let currentSpinInterval = null;
+
+        // DOM元素
+        const prizeContainer = document.getElementById('prizeContainer');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const resultImage = document.getElementById('resultImage');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const remainingChancesEl = document.getElementById('remainingChances');
+        const todayCountEl = document.getElementById('todayCount');
+        const historyList = document.getElementById('historyList');
+
+        // 初始化奖品展示
+        function initializePrizes() {
+            prizeContainer.innerHTML = '';
+            prizes.forEach(prize => {
+                const prizeItem = document.createElement('div');
+                prizeItem.className = 'prize-item';
+                prizeItem.dataset.id = prize.id;
+                
+                prizeItem.innerHTML = `
+                    <img src="${prize.image}" alt="${prize.name}" class="prize-image">
+                    <div class="prize-name">${prize.name}</div>
+                    <div class="prize-probability">中奖率: ${prize.probability}%</div>
+                `;
+                
+                prizeContainer.appendChild(prizeItem);
+            });
+        }
+
+        // 抽奖函数
+        function startLottery() {
+            if (isDrawing) return;
+            if (remainingChances <= 0) {
+                resultDisplay.textContent = "抽奖次数已用完！";
+                return;
+            }
+            
+            isDrawing = true;
+            startBtn.disabled = true;
+            startBtn.textContent = "抽奖中...";
+            startBtn.classList.add('lottery-spin');
+            
+            // 重置所有奖品高亮
+            document.querySelectorAll('.prize-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 模拟抽奖过程
+            let spinCount = 0;
+            const maxSpins = 20;
+            const spinInterval = 100;
+            
+            currentSpinInterval = setInterval(() => {
+                spinCount++;
+                
+                // 随机高亮一个奖品
+                const randomIndex = Math.floor(Math.random() * prizes.length);
+                document.querySelectorAll('.prize-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                const currentPrizeItem = document.querySelector(`[data-id="${prizes[randomIndex].id}"]`);
+                if (currentPrizeItem) {
+                    currentPrizeItem.classList.add('selected');
+                }
+                
+                // 最后一次旋转，确定最终结果
+                if (spinCount >= maxSpins) {
+                    clearInterval(currentSpinInterval);
+                    determineResult();
+                }
+            }, spinInterval);
+        }
+
+        // 确定抽奖结果
+        function determineResult() {
+            // 基于概率计算中奖结果
+            const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
+            let randomNum = Math.random() * totalProbability;
+            
+            let selectedPrize = prizes[0];
+            for (const prize of prizes) {
+                if (randomNum < prize.probability) {
+                    selectedPrize = prize;
+                    break;
+                }
+                randomNum -= prize.probability;
+            }
+            
+            // 显示结果
+            setTimeout(() => {
+                resultDisplay.textContent = `恭喜你抽中：${selectedPrize.name}`;
+                resultImage.src = selectedPrize.image;
+                resultImage.style.display = 'block';
+                
+                // 高亮显示中奖奖品
+                document.querySelectorAll('.prize-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                const winningItem = document.querySelector(`[data-id="${selectedPrize.id}"]`);
+                if (winningItem) {
+                    winningItem.classList.add('selected', 'sparkle');
+                }
+                
+                // 更新状态
+                remainingChances--;
+                todayCount++;
+                remainingChancesEl.textContent = remainingChances;
+                todayCountEl.textContent = todayCount;
+                
+                // 添加到历史记录
+                addToHistory(selectedPrize);
+                
+                // 重置按钮状态
+                isDrawing = false;
+                startBtn.disabled = false;
+                startBtn.textContent = "🎰 开始抽奖";
+                startBtn.classList.remove('lottery-spin');
+                
+                // 播放音效（可选）
+                playWinSound();
+                
+            }, 500);
+        }
+
+        // 添加到历史记录
+        function addToHistory(prize) {
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            lotteryHistory.unshift({
+                prize: prize.name,
+                time: timeString
+            });
+            
+            // 只保留最近10条记录
+            if (lotteryHistory.length > 10) {
+                lotteryHistory = lotteryHistory.slice(0, 10);
+            }
+            
+            updateHistoryDisplay();
+        }
+
+        // 更新历史记录显示
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            lotteryHistory.forEach(record => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.textContent = `${record.time} - ${record.prize}`;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // 重置记录
+        function resetRecords() {
+            if (isDrawing) {
+                clearInterval(currentSpinInterval);
+                isDrawing = false;
+                startBtn.disabled = false;
+                startBtn.textContent = "🎰 开始抽奖";
+                startBtn.classList.remove('lottery-spin');
+            }
+            
+            remainingChances = 3;
+            todayCount = 0;
+            lotteryHistory = [];
+            
+            remainingChancesEl.textContent = remainingChances;
+            todayCountEl.textContent = todayCount;
+            resultDisplay.textContent = "等待抽奖开始...";
+            resultImage.style.display = 'none';
+            
+            document.querySelectorAll('.prize-item').forEach(item => {
+                item.classList.remove('selected', 'sparkle');
+            });
+            
+            updateHistoryDisplay();
+        }
+
+        // 播放音效（简单版本）
+        function playWinSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log("音效播放失败，不影响主要功能");
+            }
+        }
+
+        // 事件监听
+        startBtn.addEventListener('click', startLottery);
+        resetBtn.addEventListener('click', resetRecords);
+
+        // 初始化
+        initializePrizes();
+        updateHistoryDisplay();
+        
+        // 提示用户如何自定义
+        console.log("💡 自定义提示：");
+        console.log("1. 修改prizes数组中的奖品图片链接和名称");
+        console.log("2. 调整probability值改变中奖概率");
+        console.log("3. 将代码保存为index.html上传到GitHub即可分享");
+    </script>
+</body>
+</html>
