@@ -608,7 +608,23 @@
         // 🎯 初始化九宫格布局（快速加载）
         function initializeNineGrid() {
             elements.nineGrid.innerHTML = '';
-            
+            if (prize.useImage) {
+            // 使用图片
+            gridItem.innerHTML = `
+                    <div class="prize-level">${prize.level}</div>
+                    <img src="${prize.image}" alt="${prize.name}" class="prize-image" loading="lazy">
+                    <div class="prize-name">${prize.name}</div>
+                    `;
+            } else {
+            // 使用emoji
+            gridItem.innerHTML = `
+                    <div class="prize-level">${prize.level}</div>
+                    <div class="prize-image" style="font-size: 40px;">
+                    ${prize.emoji}
+                    </div>
+                    <div class="prize-name">${prize.name}</div>
+                    `;
+            }
             // 打乱奖品顺序
             const shuffledPrizes = [...prizes.filter(p => p.name !== "谢谢参与")];
             shuffledPrizes.sort(() => Math.random() - 0.5);
