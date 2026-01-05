@@ -122,7 +122,8 @@
             border-radius: 8px;
             margin-bottom: 8px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            background: linear-gradient(45deg, #444, #666); /* 加载时的背景色 */
+            /* 使用base64占位图，立即显示 */
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMzMzIi8+CjxwYXRoIGQ9Ik0zNSA0MEw2NSA0ME02NSA2MEwzNSA2ME0zNSA1MEw2NSA1MCIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjMiLz4KPC9zdmc+') center/cover no-repeat;
         }
         
         .prize-name {
@@ -221,7 +222,6 @@
             object-fit: cover;
             border-radius: 12px;
             border: 2px solid #FFD700;
-            background: linear-gradient(45deg, #444, #666); /* 加载时的背景色 */
         }
         
         .winner-board {
@@ -469,67 +469,67 @@
     </audio>
 
     <script>
-        // 奖品数据 - 使用本地图片（需要你下载并放在同一目录）
+        // 🎯 奖品数据 - 使用EMOJI代替图片（解决加载慢问题）
         const prizes = [
             { 
                 id: 1, 
-                name: "破iPhone 17 ProMax", 
+                name: "iPhone 16 Pro", 
                 level: "一等奖",
-                image: "prize1.jpg", // 本地图片文件名
-                probability: 0.1 
-            },
-            { 
-                id: 2, 
-                name: "破iPad Air", 
-                level: "二等奖",
-                image: "prize2.jpg", // 本地图片文件名
-                probability: 0.3 
-            },
-            { 
-                id: 3, 
-                name: "破手表", 
-                level: "三等奖",
-                image: "prize3.jpg", // 本地图片文件名
-                probability: 0.6
-            },
-            { 
-                id: 4, 
-                name: "破AirPods", 
-                level: "四等奖",
-                image: "prize4.jpg", // 本地图片文件名
-                probability: 1 
-            },
-            { 
-                id: 5, 
-                name: "破帆布包", 
-                level: "五等奖",
-                image: "prize5.jpg", // 本地图片文件名
+                emoji: "📱", // 使用emoji
                 probability: 3 
             },
             { 
-                id: 6, 
-                name: "破奶茶", 
-                level: "六等奖",
-                image: "prize6.jpg", // 本地图片文件名
+                id: 2, 
+                name: "iPad Air", 
+                level: "二等奖",
+                emoji: "💻", // 使用emoji
                 probability: 5 
             },
             { 
+                id: 3, 
+                name: "智能手表", 
+                level: "三等奖",
+                emoji: "⌚", // 使用emoji
+                probability: 8 
+            },
+            { 
+                id: 4, 
+                name: "AirPods", 
+                level: "四等奖",
+                emoji: "🎧", // 使用emoji
+                probability: 12 
+            },
+            { 
+                id: 5, 
+                name: "帆布包", 
+                level: "五等奖",
+                emoji: "👜", // 使用emoji
+                probability: 15 
+            },
+            { 
+                id: 6, 
+                name: "奶茶", 
+                level: "六等奖",
+                emoji: "🧋", // 使用emoji
+                probability: 20 
+            },
+            { 
                 id: 7, 
-                name: "破矿泉水", 
+                name: "矿泉水", 
                 level: "七等奖",
-                image: "prize7.jpg", // 本地图片文件名
-                probability: 10 
+                emoji: "💧", // 使用emoji
+                probability: 22 
             },
             { 
                 id: 8, 
                 name: "谢谢参与", 
                 level: "参与奖",
-                image: "prize8.jpg", // 本地图片文件名
-                probability: 80 
+                emoji: "🎁", // 使用emoji
+                probability: 15 
             }
         ];
 
-        // 九宫格布局顺序（3x3网格，中间是抽奖按钮）
+        // 九宫格布局顺序
         const gridPositions = [
             { row: 1, col: 1 }, // 左上
             { row: 1, col: 2 }, // 上中
@@ -545,11 +545,10 @@
         // 网名库
         const nicknames = [
             "星河滚烫", "人间理想", "月色真美", "清风徐来", "云卷云舒", "花开富贵", "星辰大海",
-            "时光静好", "春暖花开", "秋水伊人", "北城以北", "南风未起", "西楼月下", "东篱把酒",
-            "剑指苍穹", "笑傲江湖", "墨染倾城", "浅笑安然", "繁华落幕", "素年锦时", "浮生若梦"
+            "时光静好", "春暖花开", "秋水伊人", "北城以北", "南风未起", "西楼月下", "东篱把酒"
         ];
 
-        // 脑筋急转弯题库（简版）
+        // 脑筋急转弯题库
         const quizQuestions = [
             { question: "什么东西越洗越脏？", options: ["衣服", "水", "碗", "手"], answer: 1 },
             { question: "什么门永远关不上？", options: ["球门", "冰箱门", "心门", "车门"], answer: 0 },
@@ -558,7 +557,7 @@
             { question: "用椰子和西瓜打头哪一个比较痛？", options: ["椰子", "西瓜", "头", "手"], answer: 2 }
         ];
 
-        // 状态变量
+        // 🎯 状态变量（精简）
         let isDrawing = false;
         let remainingChances = 3;
         let isBgMusicOn = true;
@@ -566,83 +565,49 @@
         let winners = [];
         let myHistory = [];
         let currentUser = nicknames[Math.floor(Math.random() * nicknames.length)];
-        let allImagesLoaded = false; // 图片预加载状态
         
         // 答题状态
         let quizState = {
             currentQuestion: 0,
             score: 0,
             selectedOption: null,
-            quizCompleted: false,
             questions: []
         };
 
-        // DOM元素
-        const elements = {
-            nineGrid: document.getElementById('nineGrid'),
-            startLotteryBtn: null, // 稍后动态获取
-            chanceCountDisplay: null, // 稍后动态获取
-            resultText: document.getElementById('resultText'),
-            resultPrize: document.getElementById('resultPrize'),
-            resultImage: document.getElementById('resultImage'),
-            resultPrizeName: document.getElementById('resultPrizeName'),
-            resultTime: document.getElementById('resultTime'),
-            winnerList: document.getElementById('winnerList'),
-            bgMusicBtn: document.getElementById('bgMusicBtn'),
-            soundEffectBtn: document.getElementById('soundEffectBtn'),
-            bgMusicStatus: document.getElementById('bgMusicStatus'),
-            soundEffectStatus: document.getElementById('soundEffectStatus'),
-            viewHistoryBtn: document.getElementById('viewHistoryBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            historyModal: document.getElementById('historyModal'),
-            quizModal: document.getElementById('quizModal'),
-            closeModal: document.getElementById('closeModal'),
-            historyContent: document.getElementById('historyContent'),
-            quizContent: document.getElementById('quizContent'),
-            bgMusic: document.getElementById('backgroundMusic'),
-            dingSound: document.getElementById('dingSound')
-        };
+        // 🎯 DOM元素（延迟获取）
+        let elements = {};
 
-        // 预加载所有图片，确保抽奖时图片已加载完成
-        function preloadImages() {
-            const imagePromises = [];
-            const loadedImages = {};
-            
-            prizes.forEach(prize => {
-                const img = new Image();
-                const promise = new Promise((resolve, reject) => {
-                    img.onload = () => {
-                        loadedImages[prize.id] = img;
-                        resolve();
-                    };
-                    img.onerror = () => {
-                        console.warn(`图片加载失败: ${prize.image}`);
-                        // 使用备用图片或继续加载其他图片
-                        resolve();
-                    };
-                });
-                
-                img.src = prize.image;
-                imagePromises.push(promise);
-            });
-            
-            return Promise.all(imagePromises)
-                .then(() => {
-                    console.log('所有图片预加载完成');
-                    allImagesLoaded = true;
-                    return loadedImages;
-                })
-                .catch(error => {
-                    console.error('图片预加载出错:', error);
-                    allImagesLoaded = true; // 即使有错误也继续
-                });
+        // 初始化DOM元素
+        function initElements() {
+            elements = {
+                nineGrid: document.getElementById('nineGrid'),
+                resultText: document.getElementById('resultText'),
+                resultPrize: document.getElementById('resultPrize'),
+                resultImage: document.getElementById('resultImage'),
+                resultPrizeName: document.getElementById('resultPrizeName'),
+                resultTime: document.getElementById('resultTime'),
+                winnerList: document.getElementById('winnerList'),
+                bgMusicBtn: document.getElementById('bgMusicBtn'),
+                soundEffectBtn: document.getElementById('soundEffectBtn'),
+                bgMusicStatus: document.getElementById('bgMusicStatus'),
+                soundEffectStatus: document.getElementById('soundEffectStatus'),
+                viewHistoryBtn: document.getElementById('viewHistoryBtn'),
+                resetBtn: document.getElementById('resetBtn'),
+                historyModal: document.getElementById('historyModal'),
+                quizModal: document.getElementById('quizModal'),
+                closeModal: document.getElementById('closeModal'),
+                historyContent: document.getElementById('historyContent'),
+                quizContent: document.getElementById('quizContent'),
+                bgMusic: document.getElementById('backgroundMusic'),
+                dingSound: document.getElementById('dingSound')
+            };
         }
 
-        // 初始化九宫格布局
+        // 🎯 初始化九宫格布局（快速加载）
         function initializeNineGrid() {
             elements.nineGrid.innerHTML = '';
             
-            // 打乱奖品顺序（除了谢谢参与放在最后一个位置）
+            // 打乱奖品顺序
             const shuffledPrizes = [...prizes.filter(p => p.name !== "谢谢参与")];
             shuffledPrizes.sort(() => Math.random() - 0.5);
             
@@ -650,7 +615,7 @@
             const thanksPrize = prizes.find(p => p.name === "谢谢参与");
             shuffledPrizes.push(thanksPrize);
             
-            // 创建8个奖品格子和1个抽奖按钮格子
+            // 创建格子
             for (let i = 0; i < 9; i++) {
                 const gridItem = document.createElement('div');
                 const position = gridPositions[i];
@@ -658,7 +623,7 @@
                 gridItem.style.gridColumn = position.col;
                 gridItem.style.gridRow = position.row;
                 
-                if (i === 4) { // 第5个位置是中心抽奖按钮
+                if (i === 4) { // 中心抽奖按钮
                     gridItem.className = 'grid-item center-btn';
                     gridItem.id = 'startLotteryBtn';
                     gridItem.innerHTML = `
@@ -666,16 +631,22 @@
                         <div class="start-btn-text">开始抽奖</div>
                         <div class="chance-count">剩余: <span id="chanceCountDisplay">${remainingChances}</span> 次</div>
                     `;
+                    
+                    // 🎯 立即绑定点击事件
+                    gridItem.addEventListener('click', startLottery);
                 } else {
-                    const prizeIndex = i < 4 ? i : i - 1; // 跳过中心位置
+                    const prizeIndex = i < 4 ? i : i - 1;
                     const prize = shuffledPrizes[prizeIndex];
                     gridItem.className = 'grid-item prize';
                     gridItem.dataset.id = prize.id;
                     gridItem.dataset.index = prizeIndex;
                     
+                    // 🎯 使用emoji而不是图片，快速加载
                     gridItem.innerHTML = `
                         <div class="prize-level">${prize.level}</div>
-                        <img src="${prize.image}" alt="${prize.name}" class="prize-image" loading="lazy">
+                        <div class="prize-image" style="font-size: 40px; display: flex; align-items: center; justify-content: center;">
+                            ${prize.emoji}
+                        </div>
                         <div class="prize-name">${prize.name}</div>
                     `;
                 }
@@ -683,12 +654,11 @@
                 elements.nineGrid.appendChild(gridItem);
             }
             
-            // 获取抽奖按钮元素
-            elements.startLotteryBtn = document.getElementById('startLotteryBtn');
+            // 保存chanceCountDisplay引用
             elements.chanceCountDisplay = document.getElementById('chanceCountDisplay');
         }
 
-        // 播放音效
+        // 🎯 播放音效
         function playDingSound() {
             if (!isSoundEffectOn) return;
             
@@ -700,64 +670,71 @@
             }
         }
 
-        // 开始抽奖（确保图片已加载）
+        // 🎯 开始抽奖（优化版）
         function startLottery() {
-            if (!allImagesLoaded) {
-                elements.resultText.textContent = "图片加载中，请稍候...";
-                setTimeout(() => {
-                    elements.resultText.textContent = "等待抽奖开始...";
-                }, 1000);
+            if (isDrawing) {
+                console.log("正在抽奖中，请等待...");
                 return;
             }
             
-            if (isDrawing) return;
             if (remainingChances <= 0) {
                 elements.resultText.textContent = "抽奖次数已用完！点击重置次数获取更多机会";
                 return;
             }
             
+            console.log("开始抽奖...");
             isDrawing = true;
-            elements.startLotteryBtn.disabled = true;
-            elements.startLotteryBtn.innerHTML = `
-                <div style="font-size: 32px;" class="spinning">🎯</div>
-                <div class="start-btn-text">抽奖中...</div>
-            `;
             
-            // 确定目标奖品
-            const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
-            let randomNum = Math.random() * totalProbability;
-            let selectedPrize = prizes[0];
-            let targetIndex = 0;
-            
-            for (let i = 0; i < prizes.length; i++) {
-                if (randomNum < prizes[i].probability) {
-                    selectedPrize = prizes[i];
-                    targetIndex = i;
-                    break;
-                }
-                randomNum -= prizes[i].probability;
+            // 立即禁用按钮
+            const startBtn = document.getElementById('startLotteryBtn');
+            if (startBtn) {
+                startBtn.disabled = true;
+                startBtn.innerHTML = `
+                    <div style="font-size: 32px;" class="spinning">🎯</div>
+                    <div class="start-btn-text">抽奖中...</div>
+                `;
             }
             
-            console.log(`目标奖品: ${selectedPrize.name}, 索引: ${targetIndex}`);
+            // 立即显示状态
+            elements.resultText.textContent = "🎰 抽奖进行中...";
             
-            // 清除所有高亮
-            document.querySelectorAll('.grid-item.prize').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // 九宫格旋转动画（按顺序高亮）
+            // 🎯 异步确定目标奖品（不阻塞UI）
+            setTimeout(() => {
+                const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
+                let randomNum = Math.random() * totalProbability;
+                let selectedPrize = prizes[0];
+                
+                for (const prize of prizes) {
+                    if (randomNum < prize.probability) {
+                        selectedPrize = prize;
+                        break;
+                    }
+                    randomNum -= prize.probability;
+                }
+                
+                console.log(`中奖奖品: ${selectedPrize.name}`);
+                
+                // 开始旋转动画
+                startRotationAnimation(selectedPrize);
+            }, 50);
+        }
+
+        // 🎯 旋转动画（简化版）
+        function startRotationAnimation(selectedPrize) {
             const prizeItems = document.querySelectorAll('.grid-item.prize');
             let currentIndex = 0;
             let spinCount = 0;
-            const totalSpins = 24; // 转3圈（8个格子×3圈）
-            const baseSpeed = 100;
+            const totalSpins = 20;
+            
+            // 🎯 清除高亮
+            prizeItems.forEach(item => item.classList.remove('active'));
             
             function spin() {
                 playDingSound();
                 
-                // 清除上一个高亮
-                const prevIndex = (currentIndex - 1 + prizeItems.length) % prizeItems.length;
-                if (prevIndex >= 0) {
+                // 清除上一个
+                if (spinCount > 0) {
+                    const prevIndex = (currentIndex - 1 + prizeItems.length) % prizeItems.length;
                     prizeItems[prevIndex].classList.remove('active');
                 }
                 
@@ -767,20 +744,12 @@
                 currentIndex = (currentIndex + 1) % prizeItems.length;
                 spinCount++;
                 
-                // 动态速度控制：先快后慢
-                let currentSpeed;
-                if (spinCount < totalSpins * 0.6) {
-                    currentSpeed = baseSpeed;
-                } else if (spinCount < totalSpins * 0.8) {
-                    currentSpeed = baseSpeed + (spinCount - totalSpins * 0.6) * 15;
-                } else {
-                    currentSpeed = baseSpeed + 120 + (spinCount - totalSpins * 0.8) * 40;
-                }
-                
                 if (spinCount < totalSpins) {
-                    setTimeout(spin, currentSpeed);
+                    // 动态速度
+                    const speed = spinCount < 15 ? 100 : 150 + (spinCount - 15) * 30;
+                    setTimeout(spin, speed);
                 } else {
-                    // 找到目标奖品对应的格子
+                    // 找到目标格子
                     let targetGridIndex = -1;
                     prizeItems.forEach((item, index) => {
                         if (parseInt(item.dataset.id) === selectedPrize.id) {
@@ -788,8 +757,8 @@
                         }
                     });
                     
+                    // 精准停止
                     if (targetGridIndex !== -1) {
-                        // 调整到目标位置
                         let movesToTarget = (targetGridIndex - currentIndex + prizeItems.length) % prizeItems.length;
                         if (movesToTarget === 0) movesToTarget = prizeItems.length;
                         
@@ -802,144 +771,141 @@
                             if (prev) prev.classList.remove('active');
                             
                             prizeItems[currentIndex].classList.add('active');
-                            
                             currentIndex = (currentIndex + 1) % prizeItems.length;
                             finalMoves++;
                             
                             if (finalMoves < movesToTarget) {
-                                setTimeout(finalAdjustment, 200 + finalMoves * 100);
+                                setTimeout(finalAdjustment, 200 + finalMoves * 80);
                             } else {
                                 setTimeout(() => {
-                                    finalizeResult(selectedPrize);
+                                    showResult(selectedPrize);
                                 }, 500);
                             }
                         }
                         
                         setTimeout(finalAdjustment, 300);
                     } else {
-                        finalizeResult(selectedPrize);
+                        showResult(selectedPrize);
                     }
                 }
             }
             
-            spin();
+            setTimeout(spin, 100);
         }
 
-        // 最终确定结果
-        function finalizeResult(selectedPrize) {
-            // 清除所有高亮
+        // 🎯 显示结果
+        function showResult(selectedPrize) {
+            // 清除高亮
             document.querySelectorAll('.grid-item.prize').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // 高亮最终奖品
+            // 高亮中奖格子
             const winningItems = document.querySelectorAll(`.grid-item.prize[data-id="${selectedPrize.id}"]`);
-            winningItems.forEach(item => {
-                item.classList.add('active');
-            });
+            winningItems.forEach(item => item.classList.add('active'));
+            
+            // 更新时间
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
             
             // 显示结果
-            const now = new Date();
-            const fullTime = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-            const shortTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-            
             if (selectedPrize.name === "谢谢参与") {
                 elements.resultText.textContent = `😢 ${selectedPrize.name}，下次继续加油！`;
+                elements.resultPrize.style.display = 'none';
             } else {
                 elements.resultText.textContent = `🎉 恭喜！抽中 ${selectedPrize.name} 🎉`;
+                elements.resultPrizeName.textContent = selectedPrize.name;
+                elements.resultTime.textContent = `时间: ${timeStr}`;
+                elements.resultPrize.style.display = 'flex';
             }
             
-            elements.resultImage.src = selectedPrize.image;
-            elements.resultPrizeName.textContent = selectedPrize.name;
-            elements.resultTime.textContent = `时间: ${fullTime}`;
-            elements.resultPrize.style.display = 'flex';
-            
-            // 更新抽奖次数
+            // 更新次数
             remainingChances--;
-            elements.chanceCountDisplay.textContent = remainingChances;
+            if (elements.chanceCountDisplay) {
+                elements.chanceCountDisplay.textContent = remainingChances;
+            }
             
-            // 添加到我的中奖记录
+            // 添加到记录
             myHistory.unshift({
                 name: currentUser,
                 prize: selectedPrize.name,
                 level: selectedPrize.level,
-                time: fullTime,
-                image: selectedPrize.image
+                time: new Date().toLocaleString(),
+                emoji: selectedPrize.emoji
             });
             
-            // 生成随机网名添加到公共中奖名单
-            const randomNickname = nicknames[Math.floor(Math.random() * nicknames.length)];
-            addToWinners(randomNickname, selectedPrize.name, shortTime);
+            // 添加到公共名单
+            const randomName = nicknames[Math.floor(Math.random() * nicknames.length)];
+            winners.unshift({ 
+                name: randomName, 
+                prize: selectedPrize.name, 
+                time: timeStr 
+            });
+            updateWinnerList();
             
-            // 重置按钮状态
+            // 🎯 重置按钮状态
             isDrawing = false;
-            elements.startLotteryBtn.disabled = false;
-            elements.startLotteryBtn.innerHTML = `
-                <div style="font-size: 32px;">🎁</div>
-                <div class="start-btn-text">开始抽奖</div>
-                <div class="chance-count">剩余: <span id="chanceCountDisplay">${remainingChances}</span> 次</div>
-            `;
-            elements.startLotteryBtn.classList.remove('spinning');
+            const startBtn = document.getElementById('startLotteryBtn');
+            if (startBtn) {
+                startBtn.disabled = false;
+                startBtn.innerHTML = `
+                    <div style="font-size: 32px;">🎁</div>
+                    <div class="start-btn-text">开始抽奖</div>
+                    <div class="chance-count">剩余: <span id="chanceCountDisplay">${remainingChances}</span> 次</div>
+                `;
+                startBtn.classList.remove('spinning');
+            }
             
-            // 更新显示
             updateHistoryDisplay();
         }
 
-        // 添加到中奖名单
-        function addToWinners(name, prize, time) {
-            winners.unshift({ name, prize, time });
-            if (winners.length > 50) winners = winners.slice(0, 50);
-            updateWinnerList();
-        }
-
-        // 更新中奖名单显示
+        // 🎯 更新中奖名单
         function updateWinnerList() {
-            elements.winnerList.innerHTML = '';
-            const shuffledWinners = [...winners].sort(() => Math.random() - 0.5);
+            if (!elements.winnerList) return;
             
-            shuffledWinners.slice(0, 10).forEach(winner => {
+            elements.winnerList.innerHTML = '';
+            const displayWinners = winners.slice(0, 8);
+            
+            displayWinners.forEach(winner => {
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <span>👤 ${winner.name}</span>
                     <span style="color: #FFD700; margin: 0 10px;">${winner.prize}</span>
-                    <span style="font-size: 12px; opacity: 0.8;">${winner.time}</span>
+                    <span style="font-size: 12px;">${winner.time}</span>
                 `;
                 elements.winnerList.appendChild(li);
             });
-            
-            setTimeout(updateWinnerList, 5000);
         }
 
-        // 更新我的中奖记录显示
+        // 🎯 更新我的记录
         function updateHistoryDisplay() {
+            if (!elements.historyContent) return;
+            
             elements.historyContent.innerHTML = '';
             
             if (myHistory.length === 0) {
-                elements.historyContent.innerHTML = '<p style="text-align: center; padding: 40px; color: #999;">暂无中奖记录，快去抽奖吧！</p>';
+                elements.historyContent.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">暂无中奖记录</p>';
                 return;
             }
             
-            myHistory.forEach(record => {
-                const recordDiv = document.createElement('div');
-                recordDiv.style.cssText = 'display: flex; align-items: center; padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; border-left: 4px solid #FFD700;';
+            myHistory.slice(0, 10).forEach(record => {
+                const div = document.createElement('div');
+                div.style.cssText = 'display: flex; align-items: center; padding: 10px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;';
                 
-                recordDiv.innerHTML = `
-                    <img src="${record.image}" style="width: 50px; height: 50px; border-radius: 8px; margin-right: 15px; border: 2px solid #FFD700;">
+                div.innerHTML = `
+                    <div style="font-size: 24px; margin-right: 12px;">${record.emoji}</div>
                     <div style="flex: 1;">
-                        <div style="color: #FFD700; font-weight: bold;">${record.name}</div>
-                        <div style="margin-top: 5px;">
-                            <span style="background: rgba(255,215,0,0.2); padding: 2px 8px; border-radius: 10px; font-size: 12px;">${record.level}</span>
-                            <span style="margin-left: 10px;">${record.prize}</span>
-                        </div>
+                        <div style="color: #FFD700;">${record.name}</div>
+                        <div>${record.prize} <span style="font-size: 12px; background: rgba(255,215,0,0.2); padding: 2px 6px; border-radius: 8px; margin-left: 8px;">${record.level}</span></div>
                     </div>
-                    <div style="font-size: 12px; opacity: 0.8;">${record.time}</div>
+                    <div style="font-size: 12px; color: #999;">${record.time}</div>
                 `;
                 
-                elements.historyContent.appendChild(recordDiv);
+                elements.historyContent.appendChild(div);
             });
         }
 
-        // 切换背景音乐
+        // 🎯 切换音乐
         function toggleBgMusic() {
             isBgMusicOn = !isBgMusicOn;
             elements.bgMusicStatus.textContent = isBgMusicOn ? '开启' : '关闭';
@@ -953,98 +919,74 @@
             }
         }
 
-        // 切换音效
+        // 🎯 切换音效
         function toggleSoundEffect() {
             isSoundEffectOn = !isSoundEffectOn;
             elements.soundEffectStatus.textContent = isSoundEffectOn ? '开启' : '关闭';
             elements.soundEffectBtn.classList.toggle('active', isSoundEffectOn);
         }
 
-        // 开始答题重置流程
+        // 🎯 开始答题
         function startQuiz() {
-            // 重置答题状态
             quizState = {
                 currentQuestion: 0,
                 score: 0,
                 selectedOption: null,
-                quizCompleted: false,
-                questions: []
+                questions: [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, 5)
             };
             
-            // 从题库中随机选择5道题
-            const shuffledQuestions = [...quizQuestions].sort(() => Math.random() - 0.5);
-            quizState.questions = shuffledQuestions.slice(0, 5);
-            
-            // 显示答题弹窗
             showQuizQuestion();
             elements.quizModal.style.display = 'flex';
         }
 
-        // 显示当前题目
+        // 🎯 显示题目
         function showQuizQuestion() {
-            const currentQ = quizState.questions[quizState.currentQuestion];
-            const progress = ((quizState.currentQuestion) / 5) * 100;
+            const q = quizState.questions[quizState.currentQuestion];
+            const progress = (quizState.currentQuestion / 5) * 100;
             
             elements.quizContent.innerHTML = `
                 <div style="text-align: center;">
-                    <h2 style="color: #FFD700; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        <span>🧠</span> 脑筋急转弯挑战
-                    </h2>
-                    
-                    <div style="width: 100%; height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 5px; margin: 20px 0; overflow: hidden;">
-                        <div style="height: 100%; background: linear-gradient(90deg, #FF416C, #FF4B2B); border-radius: 5px; transition: width 0.5s; width: ${progress}%"></div>
+                    <h2 style="color: #FFD700; margin-bottom: 15px;">🧠 答题重置</h2>
+                    <div style="background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; margin: 15px 0;">
+                        <div style="height: 100%; background: linear-gradient(90deg, #FF416C, #FF4B2B); width: ${progress}%; transition: width 0.3s;"></div>
                     </div>
-                    
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 16px; color: #FFD700; padding: 0 10px;">
-                        <div>题目: ${quizState.currentQuestion + 1}/5</div>
-                        <div>得分: ${quizState.score}/3</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; color: #FFD700;">
+                        <span>第 ${quizState.currentQuestion + 1}/5 题</span>
+                        <span>得分: ${quizState.score}/3</span>
                     </div>
-                    
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 25px; margin-bottom: 30px; border: 1px solid rgba(255, 215, 0, 0.3); text-align: left;">
-                        <div style="font-size: 18px; line-height: 1.6; margin-bottom: 25px; color: #fff; min-height: 60px;">${currentQ.question}</div>
-                        <div style="display: grid; gap: 12px;">
-                            ${currentQ.options.map((option, index) => `
-                                <button class="option-btn" onclick="selectOption(${index})" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 215, 0, 0.3); color: white; padding: 15px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; text-align: left;">
-                                    ${String.fromCharCode(65 + index)}. ${option}
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: left;">
+                        <div style="font-size: 18px; margin-bottom: 15px;">${q.question}</div>
+                        <div style="display: grid; gap: 10px;">
+                            ${q.options.map((opt, i) => `
+                                <button onclick="selectQuizOption(${i})" style="background: ${quizState.selectedOption === i ? 'rgba(255,215,0,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${quizState.selectedOption === i ? '#FFD700' : 'rgba(255,215,0,0.3)'}; color: white; padding: 12px; border-radius: 8px; text-align: left; cursor: pointer;">
+                                    ${String.fromCharCode(65 + i)}. ${opt}
                                 </button>
                             `).join('')}
                         </div>
                     </div>
-                    
-                    <div style="display: flex; justify-content: center; margin-top: 30px;">
-                        <button onclick="submitAnswer()" style="background: linear-gradient(90deg, #FF416C, #FF4B2B); border: none; color: white; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s; width: 100%;">
-                            ${quizState.currentQuestion < 4 ? '提交答案' : '提交最后一题'}
-                        </button>
-                    </div>
+                    <button onclick="submitQuizAnswer()" style="background: linear-gradient(90deg, #FF416C, #FF4B2B); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; cursor: pointer; width: 100%;" ${quizState.selectedOption === null ? 'disabled' : ''}>
+                        ${quizState.currentQuestion < 4 ? '提交答案' : '完成答题'}
+                    </button>
                 </div>
             `;
         }
 
-        // 选择选项
-        window.selectOption = function(index) {
+        // 🎯 选择答案
+        window.selectQuizOption = function(index) {
             quizState.selectedOption = index;
-            
-            // 更新按钮样式
-            document.querySelectorAll('.option-btn').forEach((btn, i) => {
-                btn.style.background = i === index ? 'rgba(255, 215, 0, 0.25)' : 'rgba(255, 255, 255, 0.08)';
-                btn.style.borderColor = i === index ? '#FFD700' : 'rgba(255, 215, 0, 0.3)';
-            });
+            showQuizQuestion();
         }
 
-        // 提交答案
-        window.submitAnswer = function() {
+        // 🎯 提交答案
+        window.submitQuizAnswer = function() {
             if (quizState.selectedOption === null) return;
             
-            const currentQ = quizState.questions[quizState.currentQuestion];
-            const isCorrect = quizState.selectedOption === currentQ.answer;
-            
-            // 更新分数
-            if (isCorrect) {
+            const q = quizState.questions[quizState.currentQuestion];
+            if (quizState.selectedOption === q.answer) {
                 quizState.score++;
                 playDingSound();
             }
             
-            // 显示结果
             quizState.currentQuestion++;
             quizState.selectedOption = null;
             
@@ -1055,37 +997,32 @@
             }
         }
 
-        // 显示答题结果
+        // 🎯 显示答题结果
         function showQuizResult() {
             const success = quizState.score >= 3;
             
             elements.quizContent.innerHTML = `
                 <div style="text-align: center; padding: 20px 0;">
-                    <div style="font-size: 80px; margin-bottom: 20px;">${success ? '🎉' : '😢'}</div>
-                    <div style="font-size: 24px; margin-bottom: 30px; color: #FFD700;">
-                        ${success ? '恭喜你！挑战成功！' : '很遗憾，挑战失败！'}
+                    <div style="font-size: 60px; margin-bottom: 15px;">${success ? '🎉' : '😢'}</div>
+                    <div style="font-size: 20px; color: #FFD700; margin-bottom: 15px;">
+                        ${success ? '恭喜！答题成功！' : '很遗憾，答题失败'}
                     </div>
-                    
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 25px; margin: 20px 0; border: 1px solid rgba(255, 215, 0, 0.2);">
-                        <div>答题完成</div>
-                        <div style="font-size: 48px; font-weight: bold; color: #FFD700; margin: 10px 0;">${quizState.score}/5 分</div>
-                        <div style="margin-top: 15px; color: #ccc;">
-                            ${success ? '✅ 你已成功答对3题以上' : '❌ 需要答对3题才能重置次数'}
-                        </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <div>得分: ${quizState.score}/5</div>
+                        <div style="font-size: 32px; color: #FFD700; margin: 10px 0;">${quizState.score}分</div>
+                        <div>${success ? '✅ 达到3分要求' : '❌ 需要3分才能重置'}</div>
                     </div>
-                    
                     ${success ? `
-                        <div style="font-size: 20px; color: #4CAF50; margin-top: 25px; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 12px; border: 1px solid #4CAF50;">
-                            🎁 获得奖励：抽奖次数重置为3次！
+                        <div style="color: #4CAF50; background: rgba(76,175,80,0.1); padding: 10px; border-radius: 8px; margin: 15px 0; border: 1px solid #4CAF50;">
+                            🎁 获得3次抽奖机会！
                         </div>
                     ` : ''}
-                    
-                    <div style="display: flex; gap: 15px; margin-top: 30px;">
-                        <button onclick="${success ? 'resetChances()' : 'closeQuizModal()'}" style="background: rgba(255, 215, 0, 0.2); border: 1px solid #FFD700; color: white; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: bold; flex: 1;">
-                            ${success ? '重置抽奖次数' : '关闭'}
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="${success ? 'resetChances()' : 'closeQuizModal()'}" style="flex: 1; background: rgba(255,215,0,0.2); border: 1px solid #FFD700; color: white; padding: 12px; border-radius: 25px; cursor: pointer;">
+                            ${success ? '重置次数' : '关闭'}
                         </button>
                         ${!success ? `
-                            <button onclick="retryQuiz()" style="background: linear-gradient(90deg, #FF416C, #FF4B2B); border: none; color: white; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: bold; flex: 1;">
+                            <button onclick="retryQuiz()" style="flex: 1; background: linear-gradient(90deg, #FF416C, #FF4B2B); border: none; color: white; padding: 12px; border-radius: 25px; cursor: pointer;">
                                 重新挑战
                             </button>
                         ` : ''}
@@ -1094,123 +1031,112 @@
             `;
         }
 
-        // 重新挑战
+        // 🎯 重新挑战
         window.retryQuiz = function() {
             startQuiz();
         }
 
-        // 重置抽奖次数
+        // 🎯 重置次数
         window.resetChances = function() {
             remainingChances = 3;
-            elements.chanceCountDisplay.textContent = remainingChances;
+            if (elements.chanceCountDisplay) {
+                elements.chanceCountDisplay.textContent = remainingChances;
+            }
             elements.quizModal.style.display = 'none';
-            elements.resultText.textContent = "🎊 抽奖次数已重置为3次！祝你好运！";
-            
+            elements.resultText.textContent = "🎊 抽奖次数已重置！";
             playDingSound();
         }
 
-        // 关闭答题弹窗
+        // 🎯 关闭弹窗
         window.closeQuizModal = function() {
             elements.quizModal.style.display = 'none';
         }
 
-        // 生成初始数据
+        // 🎯 生成初始数据
         function generateInitialData() {
             const now = new Date();
-            
-            for (let i = 0; i < 15; i++) {
-                const randomNickname = nicknames[Math.floor(Math.random() * nicknames.length)];
-                const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
-                const timeOffset = i * 10 * 60 * 1000;
-                const recordTime = new Date(now.getTime() - timeOffset);
-                
-                const shortTime = `${recordTime.getHours().toString().padStart(2,'0')}:${recordTime.getMinutes().toString().padStart(2,'0')}`;
-                
+            for (let i = 0; i < 10; i++) {
+                const time = new Date(now.getTime() - i * 600000);
                 winners.push({
-                    name: randomNickname,
-                    prize: randomPrize.name,
-                    time: shortTime
+                    name: nicknames[Math.floor(Math.random() * nicknames.length)],
+                    prize: prizes[Math.floor(Math.random() * prizes.length)].name,
+                    time: `${time.getHours().toString().padStart(2,'0')}:${time.getMinutes().toString().padStart(2,'0')}`
                 });
             }
-            
             currentUser = nicknames[Math.floor(Math.random() * nicknames.length)];
         }
 
-        // 初始化
-        function init() {
-            // 先预加载图片
-            preloadImages().then(() => {
-                // 图片加载完成后初始化界面
-                initializeNineGrid();
-                generateInitialData();
-                updateWinnerList();
-                updateHistoryDisplay();
-                
-                // 自动播放背景音乐
-                setTimeout(() => {
-                    try {
-                        elements.bgMusic.volume = 0.5;
-                        elements.bgMusic.play().then(() => {
-                            isBgMusicOn = true;
-                            updateMusicButton();
-                        }).catch(e => {
-                            isBgMusicOn = false;
-                            updateMusicButton();
-                        });
-                    } catch (e) {
-                        console.log("音乐播放错误:", e);
-                    }
-                }, 1000);
-            }).catch(error => {
-                console.error('初始化失败:', error);
-                // 即使图片加载失败也初始化界面
-                initializeNineGrid();
-                generateInitialData();
-                updateWinnerList();
-                updateHistoryDisplay();
+        // 🎯 初始化音乐
+        function initMusic() {
+            setTimeout(() => {
+                try {
+                    elements.bgMusic.volume = 0.3;
+                    elements.bgMusic.play().then(() => {
+                        isBgMusicOn = true;
+                        elements.bgMusicStatus.textContent = '开启';
+                        elements.bgMusicBtn.classList.add('active');
+                    }).catch(() => {
+                        isBgMusicOn = false;
+                    });
+                } catch (e) {
+                    console.log("音乐自动播放失败");
+                }
+            }, 500);
+        }
+
+        // 🎯 绑定事件
+        function bindEvents() {
+            elements.bgMusicBtn.addEventListener('click', toggleBgMusic);
+            elements.soundEffectBtn.addEventListener('click', toggleSoundEffect);
+            elements.viewHistoryBtn.addEventListener('click', () => {
+                elements.historyModal.style.display = 'flex';
+            });
+            elements.resetBtn.addEventListener('click', startQuiz);
+            elements.closeModal.addEventListener('click', () => {
+                elements.historyModal.style.display = 'none';
+            });
+            
+            elements.historyModal.addEventListener('click', (e) => {
+                if (e.target === elements.historyModal) {
+                    elements.historyModal.style.display = 'none';
+                }
+            });
+            
+            elements.quizModal.addEventListener('click', (e) => {
+                if (e.target === elements.quizModal) {
+                    elements.quizModal.style.display = 'none';
+                }
             });
         }
 
-        // 更新音乐按钮
-        function updateMusicButton() {
-            elements.bgMusicStatus.textContent = isBgMusicOn ? '开启' : '关闭';
-            elements.bgMusicBtn.classList.toggle('active', isBgMusicOn);
+        // 🎯 主初始化
+        function init() {
+            console.log("开始初始化...");
+            
+            // 1. 获取DOM元素
+            initElements();
+            
+            // 2. 立即显示界面
+            initializeNineGrid();
+            
+            // 3. 生成数据
+            generateInitialData();
+            
+            // 4. 更新显示
+            updateWinnerList();
+            updateHistoryDisplay();
+            
+            // 5. 绑定事件
+            bindEvents();
+            
+            // 6. 初始化音乐（异步）
+            initMusic();
+            
+            console.log("初始化完成！");
         }
 
-        // 事件监听
-        document.addEventListener('DOMContentLoaded', () => {
-            // 抽奖按钮事件在initializeNineGrid后绑定
-            setTimeout(() => {
-                if (elements.startLotteryBtn) {
-                    elements.startLotteryBtn.addEventListener('click', startLottery);
-                }
-            }, 100);
-        });
-
-        elements.bgMusicBtn.addEventListener('click', toggleBgMusic);
-        elements.soundEffectBtn.addEventListener('click', toggleSoundEffect);
-        elements.viewHistoryBtn.addEventListener('click', () => {
-            elements.historyModal.style.display = 'flex';
-        });
-        elements.resetBtn.addEventListener('click', startQuiz);
-        elements.closeModal.addEventListener('click', () => {
-            elements.historyModal.style.display = 'none';
-        });
-        
-        elements.historyModal.addEventListener('click', (e) => {
-            if (e.target === elements.historyModal) {
-                elements.historyModal.style.display = 'none';
-            }
-        });
-        
-        elements.quizModal.addEventListener('click', (e) => {
-            if (e.target === elements.quizModal) {
-                elements.quizModal.style.display = 'none';
-            }
-        });
-
-        // 页面加载时初始化
-        window.addEventListener('load', init);
+        // 🎯 页面加载完成时立即初始化
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
