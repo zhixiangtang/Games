@@ -224,14 +224,6 @@
             }
         }
         
-        .result-image {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid #FFD700;
-        }
-        
         .result-emoji {
             font-size: 60px;
             display: flex;
@@ -495,7 +487,7 @@
     
     <!-- 音乐元素 -->
     <audio id="backgroundMusic" loop>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" type="audio/mpeg">
+        <source src="papa.mp3" type="audio/mpeg">
         您的浏览器不支持音频元素
     </audio>
     
@@ -506,109 +498,100 @@
     <script>
         // 🎯 系统配置文件
         const SYSTEM_CONFIG = {
-            // ===== 答题系统配置 =====
             QUIZ: {
-                TOTAL_QUESTIONS: 5,          // 每次答题题目数量
-                REQUIRED_SCORE: 3,           // 需要答对的题目数
-                TIME_PER_QUESTION: 0,        // 每题答题时间(秒)，0表示无限制
-                MAX_RETRY_TIMES: 3           // 最大重试次数
+                TOTAL_QUESTIONS: 5,
+                REQUIRED_SCORE: 3,
+                TIME_PER_QUESTION: 0,
+                MAX_RETRY_TIMES: 3
             },
-            
-            // ===== 抽奖系统配置 =====
             LOTTERY: {
-                INITIAL_CHANCES: 3,          // 初始抽奖次数
-                MAX_CHANCES: 10,             // 最大抽奖次数上限
-                RESET_COOLDOWN: 60           // 重置冷却时间(分钟)
+                INITIAL_CHANCES: 3,
+                MAX_CHANCES: 10,
+                RESET_COOLDOWN: 60
             },
-            
-            // ===== 动画效果配置 =====
             ANIMATION: {
-                SPIN_FAST_SPEED: 80,         // 快速旋转间隔(ms)
-                SPIN_SLOW_SPEED: 200,        // 慢速旋转间隔(ms)
-                TOTAL_SPINS: 20,             // 总旋转次数
-                FINAL_SPINS: 3               // 最后减速旋转次数
+                SPIN_FAST_SPEED: 80,
+                SPIN_SLOW_SPEED: 200,
+                TOTAL_SPINS: 20,
+                FINAL_SPINS: 3
             },
-            
-            // ===== 界面显示配置 =====
             DISPLAY: {
-                WINNERS_COUNT: 10,           // 显示的中奖人数
-                HISTORY_COUNT: 10,           // 显示的历史记录数
-                AUTO_REFRESH: 5000,          // 自动刷新间隔(ms)
-                EMOJI_SIZE: "40px"           // Emoji显示大小
+                WINNERS_COUNT: 10,
+                HISTORY_COUNT: 10,
+                AUTO_REFRESH: 5000,
+                EMOJI_SIZE: "40px"
             },
-            
-            // ===== 声音配置 =====
             SOUND: {
-                BACKGROUND_VOLUME: 0.3,      // 背景音乐音量(0-1)
-                EFFECT_VOLUME: 0.7,          // 音效音量(0-1)
-                ENABLE_BY_DEFAULT: true      // 默认开启音效
+                BACKGROUND_VOLUME: 0.5,
+                EFFECT_VOLUME: 0.7,
+                ENABLE_BY_DEFAULT: true
             }
         };
 
-        // 🎯 奖品数据 - 使用EMOJI代替图片
+        // 🎯 奖品数据
         const prizes = [
             { 
                 id: 1, 
                 name: "iPhone 16 Pro", 
                 level: "一等奖",
-                emoji: "📱", // 使用emoji
-                color: "#FFD700", // 金色
+                emoji: "📱",
+                color: "#FFD700",
                 probability: 0.1 
             },
             { 
                 id: 2, 
                 name: "iPad Air", 
                 level: "二等奖",
-                emoji: "💻", // 使用emoji
-                color: "#C0C0C0", // 银色
+                emoji: "💻",
+                color: "#C0C0C0",
                 probability: 0.2 
             },
             { 
                 id: 3, 
                 name: "智能手表", 
                 level: "三等奖",
-                emoji: "⌚", // 使用emoji
-                color: "#CD7F32", // 古铜色
+                emoji: "⌚",
+                color: "#CD7F32",
                 probability: 0.3
             },
             { 
                 id: 4, 
                 name: "AirPods", 
                 level: "四等奖",
-                emoji: "🎧", // 使用emoji
-                color: "#4CAF50", // 绿色
+                emoji: "🎧",
+                color: "#4CAF50",
                 probability: 0.4 
             },
             { 
                 id: 5, 
                 name: "背包", 
                 level: "五等奖",
-                emoji: "🎒", // 使用emoji
-                color: "#2196F3", // 蓝色
+                emoji: "🎒",
+                color: "#2196F3",
                 probability:  3
             },
             { 
                 id: 6, 
                 name: "奶茶", 
                 level: "六等奖",
-                emoji: "🧋", // 使用emoji
-                color: "#E91E63", // 粉色
+                emoji: "🧋",
+                color: "#E91E63",
                 probability:  6
             },
             { 
                 id: 7, 
                 name: "矿泉水", 
                 level: "七等奖",
-                emoji: "💧", // 使用emoji
-                color: "#00BCD4", // 青色
+                emoji: "💧",
+                color: "#00BCD4",
                 probability:  10
             },
             { 
                 id: 8, 
                 name: "谢谢参与", 
                 level: "参与奖",
-                emoji: "🎁", // 使用emoji
-                color: "#9E9E9E", // 灰色
+                emoji: "🎁",
+                color: "#9E9E9E",
                 probability: 70 
             }
         ];
@@ -700,7 +683,7 @@
 
         // 🎯 状态变量
         let isDrawing = false;
-        let remainingChances = SYSTEM_CONFIG.LOTTERY.INITIAL_CHANCES; // 使用配置
+        let remainingChances = SYSTEM_CONFIG.LOTTERY.INITIAL_CHANCES;
         let isBgMusicOn = SYSTEM_CONFIG.SOUND.ENABLE_BY_DEFAULT;
         let isSoundEffectOn = SYSTEM_CONFIG.SOUND.ENABLE_BY_DEFAULT;
         let winners = [];
@@ -797,6 +780,22 @@
             elements.chanceCountDisplay = document.getElementById('chanceCountDisplay');
         }
 
+        // 🎯 修复1：更新抽奖次数显示函数
+        function updateChanceCountDisplay() {
+            if (elements.chanceCountDisplay) {
+                elements.chanceCountDisplay.textContent = remainingChances;
+            }
+            
+            // 也更新中心按钮的显示
+            const startBtn = document.getElementById('startLotteryBtn');
+            if (startBtn) {
+                const chanceCountSpan = startBtn.querySelector('.chance-count span');
+                if (chanceCountSpan) {
+                    chanceCountSpan.textContent = remainingChances;
+                }
+            }
+        }
+
         // 🎯 播放音效
         function playDingSound() {
             if (!isSoundEffectOn) return;
@@ -832,6 +831,7 @@
                 startBtn.innerHTML = `
                     <div style="font-size: 32px;" class="spinning">🎯</div>
                     <div class="start-btn-text">抽奖中...</div>
+                    <div class="chance-count">剩余: <span id="chanceCountDisplay">${remainingChances}</span> 次</div>
                 `;
             }
             
@@ -943,7 +943,7 @@
             setTimeout(spin, 100);
         }
 
-        // 🎯 显示结果（修复图片显示问题）
+        // 🎯 显示结果
         function showResult(selectedPrize) {
             // 清除高亮
             document.querySelectorAll('.grid-item.prize').forEach(item => {
@@ -958,7 +958,7 @@
             const now = new Date();
             const timeStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
             
-            // 🎯 修复：完整显示中奖结果
+            // 🎯 显示中奖结果
             if (selectedPrize.name === "谢谢参与") {
                 elements.resultText.textContent = `😢 ${selectedPrize.name}，下次继续加油！`;
                 elements.resultPrize.style.display = 'none';
@@ -983,9 +983,7 @@
             
             // 更新次数
             remainingChances--;
-            if (elements.chanceCountDisplay) {
-                elements.chanceCountDisplay.textContent = remainingChances;
-            }
+            updateChanceCountDisplay(); // 修复2：立即更新显示
             
             // 添加到记录
             myHistory.unshift({
@@ -1007,7 +1005,7 @@
                 emoji: selectedPrize.emoji
             });
             
-            // 限制显示数量（使用配置）
+            // 限制显示数量
             if (winners.length > SYSTEM_CONFIG.DISPLAY.WINNERS_COUNT * 2) {
                 winners = winners.slice(0, SYSTEM_CONFIG.DISPLAY.WINNERS_COUNT * 2);
             }
@@ -1025,12 +1023,15 @@
                     <div class="chance-count">剩余: <span id="chanceCountDisplay">${remainingChances}</span> 次</div>
                 `;
                 startBtn.classList.remove('spinning');
+                
+                // 重新保存引用
+                elements.chanceCountDisplay = document.getElementById('chanceCountDisplay');
             }
             
             updateHistoryDisplay();
         }
 
-        // 🎯 更新中奖名单（使用配置）
+        // 🎯 更新中奖名单
         function updateWinnerList() {
             if (!elements.winnerList) return;
             
@@ -1051,7 +1052,7 @@
             });
         }
 
-        // 🎯 更新我的记录（使用配置）
+        // 🎯 更新我的记录
         function updateHistoryDisplay() {
             if (!elements.historyContent) return;
             
@@ -1084,14 +1085,21 @@
             });
         }
 
-        // 🎯 切换音乐
+        // 🎯 修复3：优化音乐控制函数
         function toggleBgMusic() {
             isBgMusicOn = !isBgMusicOn;
             elements.bgMusicStatus.textContent = isBgMusicOn ? '开启' : '关闭';
             
             if (isBgMusicOn) {
                 elements.bgMusic.volume = SYSTEM_CONFIG.SOUND.BACKGROUND_VOLUME;
-                elements.bgMusic.play().catch(e => console.log("音乐播放失败"));
+                elements.bgMusic.play().catch(e => {
+                    console.log("音乐播放失败，尝试重新加载:", e);
+                    // 如果播放失败，尝试重新设置源
+                    elements.bgMusic.load();
+                    setTimeout(() => {
+                        elements.bgMusic.play().catch(e2 => console.log("再次尝试失败:", e2));
+                    }, 500);
+                });
                 elements.bgMusicBtn.classList.add('active');
             } else {
                 elements.bgMusic.pause();
@@ -1106,7 +1114,7 @@
             elements.soundEffectBtn.classList.toggle('active', isSoundEffectOn);
         }
 
-        // 🎯 开始答题（使用配置）
+        // 🎯 开始答题
         function startQuiz() {
             if (remainingChances >= SYSTEM_CONFIG.LOTTERY.MAX_CHANCES) {
                 elements.resultText.textContent = "🎊 抽奖次数已达上限！";
@@ -1182,7 +1190,7 @@
             }
         }
 
-        // 🎯 显示答题结果（使用配置）
+        // 🎯 修复4：显示答题结果并立即刷新抽奖次数
         function showQuizResult() {
             const success = quizState.score >= SYSTEM_CONFIG.QUIZ.REQUIRED_SCORE;
             
@@ -1221,12 +1229,10 @@
             startQuiz();
         }
 
-        // 🎯 重置次数（使用配置）
+        // 🎯 修复5：重置次数并立即更新显示
         window.resetChances = function() {
             remainingChances = SYSTEM_CONFIG.LOTTERY.INITIAL_CHANCES;
-            if (elements.chanceCountDisplay) {
-                elements.chanceCountDisplay.textContent = remainingChances;
-            }
+            updateChanceCountDisplay(); // 立即更新显示
             elements.quizModal.style.display = 'none';
             elements.resultText.textContent = "🎊 抽奖次数已重置！";
             playDingSound();
@@ -1254,22 +1260,38 @@
             currentUser = nicknames[Math.floor(Math.random() * nicknames.length)];
         }
 
-        // 🎯 初始化音乐
+        // 🎯 修复6：优化音乐初始化
         function initMusic() {
-            setTimeout(() => {
-                try {
-                    elements.bgMusic.volume = SYSTEM_CONFIG.SOUND.BACKGROUND_VOLUME;
-                    elements.bgMusic.play().then(() => {
-                        isBgMusicOn = true;
-                        elements.bgMusicStatus.textContent = '开启';
-                        elements.bgMusicBtn.classList.add('active');
-                    }).catch(() => {
-                        isBgMusicOn = false;
-                    });
-                } catch (e) {
-                    console.log("音乐自动播放失败");
-                }
-            }, 500);
+            // 预加载音频
+            try {
+                elements.bgMusic.load();
+                elements.dingSound.load();
+                
+                // 设置音量
+                elements.bgMusic.volume = SYSTEM_CONFIG.SOUND.BACKGROUND_VOLUME;
+                elements.dingSound.volume = SYSTEM_CONFIG.SOUND.EFFECT_VOLUME;
+                
+                // 监听音频加载完成
+                elements.bgMusic.addEventListener('canplaythrough', () => {
+                    console.log("背景音乐已加载完成");
+                });
+                
+                elements.dingSound.addEventListener('canplaythrough', () => {
+                    console.log("音效已加载完成");
+                });
+                
+                // 添加用户交互后自动播放
+                document.addEventListener('click', () => {
+                    if (isBgMusicOn && elements.bgMusic.paused) {
+                        elements.bgMusic.play().catch(e => {
+                            console.log("交互后播放失败:", e);
+                        });
+                    }
+                }, { once: true });
+                
+            } catch (e) {
+                console.log("音频初始化失败:", e);
+            }
         }
 
         // 🎯 绑定事件
@@ -1317,11 +1339,11 @@
             // 5. 绑定事件
             bindEvents();
             
-            // 6. 初始化音乐（异步）
+            // 6. 初始化音乐
             initMusic();
             
             console.log("初始化完成！");
-            console.log("系统配置已加载:", SYSTEM_CONFIG);
+            console.log("音频文件路径: papa.mp3");
         }
 
         // 🎯 页面加载完成时立即初始化
