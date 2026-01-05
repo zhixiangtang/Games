@@ -122,8 +122,16 @@
             border-radius: 8px;
             margin-bottom: 8px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            /* 使用base64占位图，立即显示 */
-            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMzMzIi8+CjxwYXRoIGQ9Ik0zNSA0MEw2NSA0ME02NSA2MEwzNSA2ME0zNSA1MEw2NSA1MCIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjMiLz4KPC9zdmc+') center/cover no-repeat;
+        }
+        
+        .prize-emoji {
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            width: 70px;
+            height: 70px;
         }
         
         .prize-name {
@@ -221,6 +229,18 @@
             height: 80px;
             object-fit: cover;
             border-radius: 12px;
+            border: 2px solid #FFD700;
+        }
+        
+        .result-emoji {
+            font-size: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
             border: 2px solid #FFD700;
         }
         
@@ -359,13 +379,20 @@
                 height: min(95vw, 500px);
             }
             
-            .prize-image {
+            .prize-emoji {
                 width: 50px;
                 height: 50px;
+                font-size: 30px;
             }
             
             .prize-name {
                 font-size: 12px;
+            }
+            
+            .result-emoji {
+                width: 70px;
+                height: 70px;
+                font-size: 40px;
             }
         }
         
@@ -376,9 +403,10 @@
                 gap: 5px;
             }
             
-            .prize-image {
+            .prize-emoji {
                 width: 40px;
                 height: 40px;
+                font-size: 24px;
             }
             
             .prize-name {
@@ -387,6 +415,12 @@
             
             .grid-item {
                 padding: 5px;
+            }
+            
+            .result-emoji {
+                width: 60px;
+                height: 60px;
+                font-size: 32px;
             }
         }
     </style>
@@ -416,10 +450,11 @@
         <div class="result-display">
             <div class="result-text" id="resultText">等待抽奖开始...</div>
             <div class="result-prize" id="resultPrize" style="display: none;">
-                <img id="resultImage" class="result-image" alt="中奖奖品">
+                <div class="result-emoji" id="resultEmoji"></div>
                 <div>
-                    <div style="color: #FFD700; font-size: 18px;" id="resultPrizeName"></div>
-                    <div style="margin-top: 8px; font-size: 14px;" id="resultTime"></div>
+                    <div style="color: #FFD700; font-size: 20px; font-weight: bold;" id="resultPrizeName"></div>
+                    <div style="color: #FFD700; font-size: 14px; margin-top: 5px;" id="resultPrizeLevel"></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #aaa;" id="resultTime"></div>
                 </div>
             </div>
         </div>
@@ -460,22 +495,64 @@
     
     <!-- 音乐元素 -->
     <audio id="backgroundMusic" loop>
-        <source src="papa.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" type="audio/mpeg">
         您的浏览器不支持音频元素
     </audio>
     
     <audio id="dingSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 🎯 奖品数据 - 使用EMOJI代替图片（解决加载慢问题）
+        // 🎯 系统配置文件
+        const SYSTEM_CONFIG = {
+            // ===== 答题系统配置 =====
+            QUIZ: {
+                TOTAL_QUESTIONS: 5,          // 每次答题题目数量
+                REQUIRED_SCORE: 3,           // 需要答对的题目数
+                TIME_PER_QUESTION: 0,        // 每题答题时间(秒)，0表示无限制
+                MAX_RETRY_TIMES: 3           // 最大重试次数
+            },
+            
+            // ===== 抽奖系统配置 =====
+            LOTTERY: {
+                INITIAL_CHANCES: 3,          // 初始抽奖次数
+                MAX_CHANCES: 10,             // 最大抽奖次数上限
+                RESET_COOLDOWN: 60           // 重置冷却时间(分钟)
+            },
+            
+            // ===== 动画效果配置 =====
+            ANIMATION: {
+                SPIN_FAST_SPEED: 80,         // 快速旋转间隔(ms)
+                SPIN_SLOW_SPEED: 200,        // 慢速旋转间隔(ms)
+                TOTAL_SPINS: 20,             // 总旋转次数
+                FINAL_SPINS: 3               // 最后减速旋转次数
+            },
+            
+            // ===== 界面显示配置 =====
+            DISPLAY: {
+                WINNERS_COUNT: 10,           // 显示的中奖人数
+                HISTORY_COUNT: 10,           // 显示的历史记录数
+                AUTO_REFRESH: 5000,          // 自动刷新间隔(ms)
+                EMOJI_SIZE: "40px"           // Emoji显示大小
+            },
+            
+            // ===== 声音配置 =====
+            SOUND: {
+                BACKGROUND_VOLUME: 0.3,      // 背景音乐音量(0-1)
+                EFFECT_VOLUME: 0.7,          // 音效音量(0-1)
+                ENABLE_BY_DEFAULT: true      // 默认开启音效
+            }
+        };
+
+        // 🎯 奖品数据 - 使用EMOJI代替图片
         const prizes = [
             { 
                 id: 1, 
                 name: "iPhone 16 Pro", 
                 level: "一等奖",
                 emoji: "📱", // 使用emoji
+                color: "#FFD700", // 金色
                 probability: 0.1 
             },
             { 
@@ -483,6 +560,7 @@
                 name: "iPad Air", 
                 level: "二等奖",
                 emoji: "💻", // 使用emoji
+                color: "#C0C0C0", // 银色
                 probability: 0.2 
             },
             { 
@@ -490,6 +568,7 @@
                 name: "智能手表", 
                 level: "三等奖",
                 emoji: "⌚", // 使用emoji
+                color: "#CD7F32", // 古铜色
                 probability: 0.3
             },
             { 
@@ -497,6 +576,7 @@
                 name: "AirPods", 
                 level: "四等奖",
                 emoji: "🎧", // 使用emoji
+                color: "#4CAF50", // 绿色
                 probability: 0.4 
             },
             { 
@@ -504,6 +584,7 @@
                 name: "背包", 
                 level: "五等奖",
                 emoji: "🎒", // 使用emoji
+                color: "#2196F3", // 蓝色
                 probability:  3
             },
             { 
@@ -511,6 +592,7 @@
                 name: "奶茶", 
                 level: "六等奖",
                 emoji: "🧋", // 使用emoji
+                color: "#E91E63", // 粉色
                 probability:  6
             },
             { 
@@ -518,6 +600,7 @@
                 name: "矿泉水", 
                 level: "七等奖",
                 emoji: "💧", // 使用emoji
+                color: "#00BCD4", // 青色
                 probability:  10
             },
             { 
@@ -525,6 +608,7 @@
                 name: "谢谢参与", 
                 level: "参与奖",
                 emoji: "🎁", // 使用emoji
+                color: "#9E9E9E", // 灰色
                 probability: 70 
             }
         ];
@@ -614,11 +698,11 @@
             { question: "什么事天不知道地知道，你不知道我知道？", options: ["鞋子破了", "秘密", "天气", "答案"], answer: 0 }
         ];
 
-        // 🎯 状态变量（精简）
+        // 🎯 状态变量
         let isDrawing = false;
-        let remainingChances = 3;
-        let isBgMusicOn = true;
-        let isSoundEffectOn = true;
+        let remainingChances = SYSTEM_CONFIG.LOTTERY.INITIAL_CHANCES; // 使用配置
+        let isBgMusicOn = SYSTEM_CONFIG.SOUND.ENABLE_BY_DEFAULT;
+        let isSoundEffectOn = SYSTEM_CONFIG.SOUND.ENABLE_BY_DEFAULT;
         let winners = [];
         let myHistory = [];
         let currentUser = nicknames[Math.floor(Math.random() * nicknames.length)];
@@ -631,7 +715,7 @@
             questions: []
         };
 
-        // 🎯 DOM元素（延迟获取）
+        // 🎯 DOM元素
         let elements = {};
 
         // 初始化DOM元素
@@ -640,8 +724,9 @@
                 nineGrid: document.getElementById('nineGrid'),
                 resultText: document.getElementById('resultText'),
                 resultPrize: document.getElementById('resultPrize'),
-                resultImage: document.getElementById('resultImage'),
+                resultEmoji: document.getElementById('resultEmoji'),
                 resultPrizeName: document.getElementById('resultPrizeName'),
+                resultPrizeLevel: document.getElementById('resultPrizeLevel'),
                 resultTime: document.getElementById('resultTime'),
                 winnerList: document.getElementById('winnerList'),
                 bgMusicBtn: document.getElementById('bgMusicBtn'),
@@ -660,7 +745,7 @@
             };
         }
 
-        // 🎯 初始化九宫格布局（快速加载）
+        // 🎯 初始化九宫格布局
         function initializeNineGrid() {
             elements.nineGrid.innerHTML = '';
             
@@ -689,7 +774,6 @@
                         <div class="chance-count">剩余: <span id="chanceCountDisplay">${remainingChances}</span> 次</div>
                     `;
                     
-                    // 🎯 立即绑定点击事件
                     gridItem.addEventListener('click', startLottery);
                 } else {
                     const prizeIndex = i < 4 ? i : i - 1;
@@ -698,12 +782,10 @@
                     gridItem.dataset.id = prize.id;
                     gridItem.dataset.index = prizeIndex;
                     
-                    // 🎯 使用emoji而不是图片，快速加载
+                    // 🎯 使用emoji
                     gridItem.innerHTML = `
                         <div class="prize-level">${prize.level}</div>
-                        <div class="prize-image" style="font-size: 40px; display: flex; align-items: center; justify-content: center;">
-                            ${prize.emoji}
-                        </div>
+                        <div class="prize-emoji">${prize.emoji}</div>
                         <div class="prize-name">${prize.name}</div>
                     `;
                 }
@@ -721,13 +803,14 @@
             
             try {
                 elements.dingSound.currentTime = 0;
+                elements.dingSound.volume = SYSTEM_CONFIG.SOUND.EFFECT_VOLUME;
                 elements.dingSound.play().catch(e => console.log("音效播放失败"));
             } catch (e) {
                 console.log("音效错误:", e);
             }
         }
 
-        // 🎯 开始抽奖（优化版）
+        // 🎯 开始抽奖
         function startLottery() {
             if (isDrawing) {
                 console.log("正在抽奖中，请等待...");
@@ -755,7 +838,10 @@
             // 立即显示状态
             elements.resultText.textContent = "🎰 抽奖进行中...";
             
-            // 🎯 异步确定目标奖品（不阻塞UI）
+            // 隐藏上一次的结果
+            elements.resultPrize.style.display = 'none';
+            
+            // 🎯 异步确定目标奖品
             setTimeout(() => {
                 const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
                 let randomNum = Math.random() * totalProbability;
@@ -776,14 +862,14 @@
             }, 50);
         }
 
-        // 🎯 旋转动画（简化版）
+        // 🎯 旋转动画（使用配置）
         function startRotationAnimation(selectedPrize) {
             const prizeItems = document.querySelectorAll('.grid-item.prize');
             let currentIndex = 0;
             let spinCount = 0;
-            const totalSpins = 20;
+            const totalSpins = SYSTEM_CONFIG.ANIMATION.TOTAL_SPINS;
             
-            // 🎯 清除高亮
+            // 清除高亮
             prizeItems.forEach(item => item.classList.remove('active'));
             
             function spin() {
@@ -802,8 +888,15 @@
                 spinCount++;
                 
                 if (spinCount < totalSpins) {
-                    // 动态速度
-                    const speed = spinCount < 15 ? 100 : 150 + (spinCount - 15) * 30;
+                    // 动态速度（使用配置）
+                    let speed;
+                    if (spinCount < 15) {
+                        speed = SYSTEM_CONFIG.ANIMATION.SPIN_FAST_SPEED;
+                    } else if (spinCount < 17) {
+                        speed = SYSTEM_CONFIG.ANIMATION.SPIN_SLOW_SPEED;
+                    } else {
+                        speed = SYSTEM_CONFIG.ANIMATION.SPIN_SLOW_SPEED + (spinCount - 17) * 50;
+                    }
                     setTimeout(spin, speed);
                 } else {
                     // 找到目标格子
@@ -850,7 +943,7 @@
             setTimeout(spin, 100);
         }
 
-        // 🎯 显示结果
+        // 🎯 显示结果（修复图片显示问题）
         function showResult(selectedPrize) {
             // 清除高亮
             document.querySelectorAll('.grid-item.prize').forEach(item => {
@@ -863,16 +956,28 @@
             
             // 更新时间
             const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+            const timeStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
             
-            // 显示结果
+            // 🎯 修复：完整显示中奖结果
             if (selectedPrize.name === "谢谢参与") {
                 elements.resultText.textContent = `😢 ${selectedPrize.name}，下次继续加油！`;
                 elements.resultPrize.style.display = 'none';
             } else {
                 elements.resultText.textContent = `🎉 恭喜！抽中 ${selectedPrize.name} 🎉`;
+                
+                // 设置emoji
+                elements.resultEmoji.textContent = selectedPrize.emoji;
+                elements.resultEmoji.style.color = selectedPrize.color;
+                
+                // 设置奖品名称和等级
                 elements.resultPrizeName.textContent = selectedPrize.name;
-                elements.resultTime.textContent = `时间: ${timeStr}`;
+                elements.resultPrizeLevel.textContent = selectedPrize.level;
+                elements.resultPrizeLevel.style.color = selectedPrize.color;
+                
+                // 设置时间
+                elements.resultTime.textContent = `中奖时间: ${timeStr}`;
+                
+                // 显示结果区域
                 elements.resultPrize.style.display = 'flex';
             }
             
@@ -887,8 +992,9 @@
                 name: currentUser,
                 prize: selectedPrize.name,
                 level: selectedPrize.level,
-                time: new Date().toLocaleString(),
-                emoji: selectedPrize.emoji
+                time: timeStr,
+                emoji: selectedPrize.emoji,
+                color: selectedPrize.color
             });
             
             // 添加到公共名单
@@ -896,8 +1002,16 @@
             winners.unshift({ 
                 name: randomName, 
                 prize: selectedPrize.name, 
-                time: timeStr 
+                level: selectedPrize.level,
+                time: now.toLocaleTimeString(),
+                emoji: selectedPrize.emoji
             });
+            
+            // 限制显示数量（使用配置）
+            if (winners.length > SYSTEM_CONFIG.DISPLAY.WINNERS_COUNT * 2) {
+                winners = winners.slice(0, SYSTEM_CONFIG.DISPLAY.WINNERS_COUNT * 2);
+            }
+            
             updateWinnerList();
             
             // 🎯 重置按钮状态
@@ -916,25 +1030,28 @@
             updateHistoryDisplay();
         }
 
-        // 🎯 更新中奖名单
+        // 🎯 更新中奖名单（使用配置）
         function updateWinnerList() {
             if (!elements.winnerList) return;
             
             elements.winnerList.innerHTML = '';
-            const displayWinners = winners.slice(0, 8);
+            const displayWinners = winners.slice(0, SYSTEM_CONFIG.DISPLAY.WINNERS_COUNT);
             
             displayWinners.forEach(winner => {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    <span>👤 ${winner.name}</span>
-                    <span style="color: #FFD700; margin: 0 10px;">${winner.prize}</span>
-                    <span style="font-size: 12px;">${winner.time}</span>
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 18px;">${winner.emoji}</span>
+                        <span>👤 ${winner.name}</span>
+                    </span>
+                    <span style="color: #FFD700; margin: 0 10px; font-weight: bold;">${winner.prize}</span>
+                    <span style="font-size: 12px; color: #aaa;">${winner.time}</span>
                 `;
                 elements.winnerList.appendChild(li);
             });
         }
 
-        // 🎯 更新我的记录
+        // 🎯 更新我的记录（使用配置）
         function updateHistoryDisplay() {
             if (!elements.historyContent) return;
             
@@ -945,17 +1062,22 @@
                 return;
             }
             
-            myHistory.slice(0, 10).forEach(record => {
+            myHistory.slice(0, SYSTEM_CONFIG.DISPLAY.HISTORY_COUNT).forEach(record => {
                 const div = document.createElement('div');
                 div.style.cssText = 'display: flex; align-items: center; padding: 10px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;';
                 
                 div.innerHTML = `
-                    <div style="font-size: 24px; margin-right: 12px;">${record.emoji}</div>
+                    <div style="font-size: 28px; margin-right: 12px; color: ${record.color};">${record.emoji}</div>
                     <div style="flex: 1;">
-                        <div style="color: #FFD700;">${record.name}</div>
-                        <div>${record.prize} <span style="font-size: 12px; background: rgba(255,215,0,0.2); padding: 2px 6px; border-radius: 8px; margin-left: 8px;">${record.level}</span></div>
+                        <div style="color: #FFD700; font-weight: bold;">${record.name}</div>
+                        <div>${record.prize} 
+                            <span style="font-size: 12px; background: rgba(255,215,0,0.2); padding: 2px 8px; border-radius: 8px; margin-left: 8px; color: ${record.color};">${record.level}</span>
+                        </div>
                     </div>
-                    <div style="font-size: 12px; color: #999;">${record.time}</div>
+                    <div style="font-size: 12px; color: #999; text-align: right;">
+                        <div>${record.time.split(' ')[0]}</div>
+                        <div>${record.time.split(' ')[1]}</div>
+                    </div>
                 `;
                 
                 elements.historyContent.appendChild(div);
@@ -968,6 +1090,7 @@
             elements.bgMusicStatus.textContent = isBgMusicOn ? '开启' : '关闭';
             
             if (isBgMusicOn) {
+                elements.bgMusic.volume = SYSTEM_CONFIG.SOUND.BACKGROUND_VOLUME;
                 elements.bgMusic.play().catch(e => console.log("音乐播放失败"));
                 elements.bgMusicBtn.classList.add('active');
             } else {
@@ -983,13 +1106,18 @@
             elements.soundEffectBtn.classList.toggle('active', isSoundEffectOn);
         }
 
-        // 🎯 开始答题
+        // 🎯 开始答题（使用配置）
         function startQuiz() {
+            if (remainingChances >= SYSTEM_CONFIG.LOTTERY.MAX_CHANCES) {
+                elements.resultText.textContent = "🎊 抽奖次数已达上限！";
+                return;
+            }
+            
             quizState = {
                 currentQuestion: 0,
                 score: 0,
                 selectedOption: null,
-                questions: [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, 5)
+                questions: [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, SYSTEM_CONFIG.QUIZ.TOTAL_QUESTIONS)
             };
             
             showQuizQuestion();
@@ -999,7 +1127,7 @@
         // 🎯 显示题目
         function showQuizQuestion() {
             const q = quizState.questions[quizState.currentQuestion];
-            const progress = (quizState.currentQuestion / 5) * 100;
+            const progress = (quizState.currentQuestion / SYSTEM_CONFIG.QUIZ.TOTAL_QUESTIONS) * 100;
             
             elements.quizContent.innerHTML = `
                 <div style="text-align: center;">
@@ -1008,11 +1136,11 @@
                         <div style="height: 100%; background: linear-gradient(90deg, #FF416C, #FF4B2B); width: ${progress}%; transition: width 0.3s;"></div>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 20px; color: #FFD700;">
-                        <span>第 ${quizState.currentQuestion + 1}/5 题</span>
-                        <span>得分: ${quizState.score}/3</span>
+                        <span>第 ${quizState.currentQuestion + 1}/${SYSTEM_CONFIG.QUIZ.TOTAL_QUESTIONS} 题</span>
+                        <span>得分: ${quizState.score}/${SYSTEM_CONFIG.QUIZ.REQUIRED_SCORE}</span>
                     </div>
                     <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: left;">
-                        <div style="font-size: 18px; margin-bottom: 15px;">${q.question}</div>
+                        <div style="font-size: 18px; margin-bottom: 15px; color: white;">${q.question}</div>
                         <div style="display: grid; gap: 10px;">
                             ${q.options.map((opt, i) => `
                                 <button onclick="selectQuizOption(${i})" style="background: ${quizState.selectedOption === i ? 'rgba(255,215,0,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${quizState.selectedOption === i ? '#FFD700' : 'rgba(255,215,0,0.3)'}; color: white; padding: 12px; border-radius: 8px; text-align: left; cursor: pointer;">
@@ -1022,7 +1150,7 @@
                         </div>
                     </div>
                     <button onclick="submitQuizAnswer()" style="background: linear-gradient(90deg, #FF416C, #FF4B2B); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; cursor: pointer; width: 100%;" ${quizState.selectedOption === null ? 'disabled' : ''}>
-                        ${quizState.currentQuestion < 4 ? '提交答案' : '完成答题'}
+                        ${quizState.currentQuestion < SYSTEM_CONFIG.QUIZ.TOTAL_QUESTIONS - 1 ? '提交答案' : '完成答题'}
                     </button>
                 </div>
             `;
@@ -1054,9 +1182,9 @@
             }
         }
 
-        // 🎯 显示答题结果
+        // 🎯 显示答题结果（使用配置）
         function showQuizResult() {
-            const success = quizState.score >= 3;
+            const success = quizState.score >= SYSTEM_CONFIG.QUIZ.REQUIRED_SCORE;
             
             elements.quizContent.innerHTML = `
                 <div style="text-align: center; padding: 20px 0;">
@@ -1065,13 +1193,13 @@
                         ${success ? '恭喜！答题成功！' : '很遗憾，答题失败'}
                     </div>
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 15px 0;">
-                        <div>得分: ${quizState.score}/5</div>
+                        <div>得分: ${quizState.score}/${SYSTEM_CONFIG.QUIZ.TOTAL_QUESTIONS}</div>
                         <div style="font-size: 32px; color: #FFD700; margin: 10px 0;">${quizState.score}分</div>
-                        <div>${success ? '✅ 达到3分要求' : '❌ 需要3分才能重置'}</div>
+                        <div>${success ? '✅ 达到要求分数' : `❌ 需要${SYSTEM_CONFIG.QUIZ.REQUIRED_SCORE}分才能重置`}</div>
                     </div>
                     ${success ? `
                         <div style="color: #4CAF50; background: rgba(76,175,80,0.1); padding: 10px; border-radius: 8px; margin: 15px 0; border: 1px solid #4CAF50;">
-                            🎁 获得3次抽奖机会！
+                            🎁 获得${SYSTEM_CONFIG.LOTTERY.INITIAL_CHANCES}次抽奖机会！
                         </div>
                     ` : ''}
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -1093,9 +1221,9 @@
             startQuiz();
         }
 
-        // 🎯 重置次数
+        // 🎯 重置次数（使用配置）
         window.resetChances = function() {
-            remainingChances = 3;
+            remainingChances = SYSTEM_CONFIG.LOTTERY.INITIAL_CHANCES;
             if (elements.chanceCountDisplay) {
                 elements.chanceCountDisplay.textContent = remainingChances;
             }
@@ -1112,12 +1240,15 @@
         // 🎯 生成初始数据
         function generateInitialData() {
             const now = new Date();
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < SYSTEM_CONFIG.DISPLAY.WINNERS_COUNT; i++) {
                 const time = new Date(now.getTime() - i * 600000);
+                const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
                 winners.push({
                     name: nicknames[Math.floor(Math.random() * nicknames.length)],
-                    prize: prizes[Math.floor(Math.random() * prizes.length)].name,
-                    time: `${time.getHours().toString().padStart(2,'0')}:${time.getMinutes().toString().padStart(2,'0')}`
+                    prize: randomPrize.name,
+                    level: randomPrize.level,
+                    time: `${time.getHours().toString().padStart(2,'0')}:${time.getMinutes().toString().padStart(2,'0')}`,
+                    emoji: randomPrize.emoji
                 });
             }
             currentUser = nicknames[Math.floor(Math.random() * nicknames.length)];
@@ -1127,7 +1258,7 @@
         function initMusic() {
             setTimeout(() => {
                 try {
-                    elements.bgMusic.volume = 0.3;
+                    elements.bgMusic.volume = SYSTEM_CONFIG.SOUND.BACKGROUND_VOLUME;
                     elements.bgMusic.play().then(() => {
                         isBgMusicOn = true;
                         elements.bgMusicStatus.textContent = '开启';
@@ -1190,6 +1321,7 @@
             initMusic();
             
             console.log("初始化完成！");
+            console.log("系统配置已加载:", SYSTEM_CONFIG);
         }
 
         // 🎯 页面加载完成时立即初始化
