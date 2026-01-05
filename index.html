@@ -476,58 +476,56 @@
                 name: "iPhone 16 Pro", 
                 level: "一等奖",
                 emoji: "📱", // 使用emoji
-                image: "prize1.jpg",
-                useImage: true,
-                probability: 3 
+                probability: 0.1 
             },
             { 
                 id: 2, 
                 name: "iPad Air", 
                 level: "二等奖",
                 emoji: "💻", // 使用emoji
-                probability: 5 
+                probability: 0.2 
             },
             { 
                 id: 3, 
                 name: "智能手表", 
                 level: "三等奖",
                 emoji: "⌚", // 使用emoji
-                probability: 8 
+                probability: 0.3
             },
             { 
                 id: 4, 
                 name: "AirPods", 
                 level: "四等奖",
                 emoji: "🎧", // 使用emoji
-                probability: 12 
+                probability: 0.4 
             },
             { 
                 id: 5, 
-                name: "帆布包", 
+                name: "背包", 
                 level: "五等奖",
-                emoji: "👜", // 使用emoji
-                probability: 15 
+                emoji: "🎒", // 使用emoji
+                probability:  3
             },
             { 
                 id: 6, 
                 name: "奶茶", 
                 level: "六等奖",
                 emoji: "🧋", // 使用emoji
-                probability: 20 
+                probability:  6
             },
             { 
                 id: 7, 
                 name: "矿泉水", 
                 level: "七等奖",
                 emoji: "💧", // 使用emoji
-                probability: 22 
+                probability:  10
             },
             { 
                 id: 8, 
                 name: "谢谢参与", 
                 level: "参与奖",
                 emoji: "🎁", // 使用emoji
-                probability: 15 
+                probability: 70 
             }
         ];
 
@@ -547,7 +545,19 @@
         // 网名库
         const nicknames = [
             "星河滚烫", "人间理想", "月色真美", "清风徐来", "云卷云舒", "花开富贵", "星辰大海",
-            "时光静好", "春暖花开", "秋水伊人", "北城以北", "南风未起", "西楼月下", "东篱把酒"
+            "时光静好", "春暖花开", "秋水伊人", "北城以北", "南风未起", "西楼月下", "东篱把酒",
+            "剑指苍穹", "笑傲江湖", "墨染倾城", "浅笑安然", "繁华落幕", "素年锦时", "浮生若梦",
+            "半城烟沙", "一世繁华", "三生三世", "四海八荒", "五湖四海", "六道轮回", "七星高照",
+            "八仙过海", "九九归一", "十全十美", "百事可乐", "千与千寻", "万里挑一", "亿表人才",
+            "王者归来", "荣耀王者", "吃鸡大神", "电竞少女", "游戏人生", "二次元君", "动漫宅男",
+            "文艺青年", "摇滚巨星", "流行教主", "时尚达人", "美食家", "旅行家", "摄影师",
+            "程序员", "设计师", "产品经理", "运营大佬", "市场专家", "销售冠军", "财务自由",
+            "投资天才", "创业先锋", "学霸君", "学渣逆袭", "考试大神", "论文杀手", "实习达人",
+            "职场精英", "退休生活", "养生专家", "健身达人", "瑜伽大师", "跑步冠军", "游泳健将",
+            "篮球高手", "足球明星", "电竞选手", "主播大佬", "网红达人", "流量明星", "粉丝千万",
+            "点赞过万", "评论破千", "转发百万", "热搜第一", "热门话题", "流量担当", "月光族",
+            "朝阳群众", "夜猫子", "早起鸟", "技术宅", "文艺范", "酷盖", "萌新", "大佬",
+            "肝帝", "欧皇", "非酋", "氪金", "白嫖", "佛系", "硬核", "躺平", "内卷", "摆烂"
         ];
 
         // 脑筋急转弯题库
@@ -556,7 +566,52 @@
             { question: "什么门永远关不上？", options: ["球门", "冰箱门", "心门", "车门"], answer: 0 },
             { question: "什么东西天气越热，它爬得越高？", options: ["温度计", "蚂蚁", "太阳", "气球"], answer: 0 },
             { question: "什么蛋打不烂，煮不熟，更不能吃？", options: ["鸡蛋", "笨蛋", "鸭蛋", "零蛋"], answer: 1 },
-            { question: "用椰子和西瓜打头哪一个比较痛？", options: ["椰子", "西瓜", "头", "手"], answer: 2 }
+            { question: "用椰子和西瓜打头哪一个比较痛？", options: ["椰子", "西瓜", "头", "手"], answer: 2 },
+            { question: "早晨醒来，每个人都会去做的第一件事是什么？", options: ["睁眼", "刷牙", "上厕所", "穿衣服"], answer: 0 },
+            { question: "什么东西人们在不停地吃它，却永远吃不饱？", options: ["空气", "米饭", "零食", "口水"], answer: 0 },
+            { question: "什么车子寸步难行？", options: ["风车", "自行车", "汽车", "马车"], answer: 0 },
+            { question: "哪一个月有二十八天？", options: ["二月", "每个月", "十二月", "六月"], answer: 1 },
+            { question: "什么英文字母最多人喜欢听？", options: ["A", "C", "D", "CD"], answer: 3 },
+            { question: "一只凶猛的饿猫，看到老鼠，为何拔腿就跑？", options: ["去追老鼠", "去捉老鼠", "跑去拍电影", "跑去抓鱼"], answer: 3 },
+            { question: "小红与妈妈都在同一个班里上课，这是为什么？", options: ["妈妈是老师", "小红是老师", "妈妈是学生", "妈妈在听课"], answer: 0 },
+            { question: "什么水永远用不完？", options: ["自来水", "泪水", "口水", "泪水"], answer: 2 },
+            { question: "什么东西有五个头，但人不觉得它怪？", options: ["手", "脚", "手套", "怪物"], answer: 1 },
+            { question: "什么酒不能喝？", options: ["白酒", "啤酒", "碘酒", "红酒"], answer: 2 },
+            { question: "什么东西晚上才生出尾巴呢？", options: ["星星", "月亮", "流星", "萤火虫"], answer: 2 },
+            { question: "书店里买不到什么书？", options: ["教科书", "小说", "遗书", "漫画"], answer: 2 },
+            { question: "什么路最窄？", options: ["山路", "水路", "冤家路窄", "公路"], answer: 2 },
+            { question: "什么人始终不敢洗澡？", options: ["泥人", "盲人", "老人", "小孩"], answer: 0 },
+            { question: "什么牛不会吃草？", options: ["蜗牛", "奶牛", "黄牛", "水牛"], answer: 0 },
+            { question: "什么东西嘴里没有舌头？", options: ["茶壶嘴", "水壶", "茶杯", "保温杯"], answer: 0 },
+            { question: "什么人生病从来不看医生？", options: ["盲人", "医生", "机器人", "死人"], answer: 1 },
+            { question: "时钟什么时候不会走？", options: ["没电时", "坏了时", "时钟本来就不会走", "装的时候"], answer: 2 },
+            { question: "什么字全世界通用？", options: ["英文", "中文", "阿拉伯数字", "数学符号"], answer: 2 },
+            { question: "为什么小王从初一到初三就学了一篇课文？", options: ["他很懒", "老师只教一篇", "课文很长", "初一到初三只有三天"], answer: 3 },
+            { question: "一个人空肚子最多能吃几个鸡蛋？", options: ["一个", "两个", "三个", "一个（因为吃了一个后就不是空肚子了）"], answer: 3 },
+            { question: "当哥伦布一只脚迈上新大陆后，紧接着做什么？", options: ["迈上另一只脚", "插上旗帜", "高呼胜利", "开始探险"], answer: 0 },
+            { question: "什么东西比乌鸦更讨厌？", options: ["乌鸦嘴", "乌鸦的同类", "乌鸦的敌人", "乌鸦本身"], answer: 0 },
+            { question: "世界上除了火车啥车最长？", options: ["堵车", "火车", "汽车", "货车"], answer: 0 },
+            { question: "什么东西不能吃？", options: ["东西方向", "食物", "水", "空气"], answer: 0 },
+            { question: "为什么大雁秋天要飞到南方去？", options: ["因为南方暖和", "因为走得太慢了", "因为飞比走快", "因为是候鸟"], answer: 1 },
+            { question: "什么帽不能戴？", options: ["螺丝帽", "草帽", "棒球帽", "礼帽"], answer: 0 },
+            { question: "为什么大部分佛教徒都在北半球？", options: ["南无阿弥陀佛", "气候原因", "历史原因", "地理原因"], answer: 0 },
+            { question: "什么东西有头无脚？", options: ["钉子", "蛇", "蚯蚓", "铅笔"], answer: 0 },
+            { question: "黑人为什么喜欢吃白色巧克力？", options: ["怕咬到自己的手", "白色好吃", "黑色太苦", "营养好"], answer: 0 },
+            { question: "谁天天去看病？", options: ["医生", "病人", "护士", "医院院长"], answer: 0 },
+            { question: "什么照片看不出照的是谁？", options: ["X光照片", "模糊照片", "背影照片", "黑白照片"], answer: 0 },
+            { question: "什么布剪不断？", options: ["瀑布", "棉布", "麻布", "纱布"], answer: 0 },
+            { question: "什么东西做的人知道，买的人知道，卖的人知道，用的人却不知道？", options: ["棺材", "衣服", "食物", "房子"], answer: 0 },
+            { question: "一个人从飞机上掉下来，为什么没摔死呢？", options: ["飞机停在地上", "有降落伞", "掉在海里", "掉在棉花上"], answer: 0 },
+            { question: "什么人心肠最不好？", options: ["得胃肠炎的人", "心脏病的人", "没良心的人", "医生"], answer: 1 },
+            { question: "哪项比赛是往后跑的？", options: ["拔河", "跑步", "游泳", "跳远"], answer: 0 },
+            { question: "什么官不仅不领工资，还要自掏腰包？", options: ["新郎官", "军官", "法官", "考官"], answer: 0 },
+            { question: "什么人生来就称王？", options: ["国王", "王子", "皇帝", "姓王的人"], answer: 3 },
+            { question: "什么花没有根？", options: ["烟花", "雪花", "浪花", "火花"], answer: 0 },
+            { question: "什么东西最容易满足？", options: ["袜子", "鞋子", "帽子", "手套"], answer: 0 },
+            { question: "什么鸡没有翅膀？", options: ["田鸡", "山鸡", "野鸡", "烧鸡"], answer: 0 },
+            { question: "什么船从来不下水？", options: ["宇宙飞船", "航空母舰", "帆船", "破船"], answer: 0 },
+            { question: "什么人一年中只工作一天？", options: ["圣诞老人", "演员", "程序员", "老师"], answer: 0 },
+            { question: "什么事天不知道地知道，你不知道我知道？", options: ["鞋子破了", "秘密", "天气", "答案"], answer: 0 }
         ];
 
         // 🎯 状态变量（精简）
@@ -608,23 +663,7 @@
         // 🎯 初始化九宫格布局（快速加载）
         function initializeNineGrid() {
             elements.nineGrid.innerHTML = '';
-            if (prize.useImage) {
-            // 使用图片
-            gridItem.innerHTML = `
-                    <div class="prize-level">${prize.level}</div>
-                    <img src="${prize.image}" alt="${prize.name}" class="prize-image" loading="lazy">
-                    <div class="prize-name">${prize.name}</div>
-                    `;
-            } else {
-            // 使用emoji
-            gridItem.innerHTML = `
-                    <div class="prize-level">${prize.level}</div>
-                    <div class="prize-image" style="font-size: 40px;">
-                    ${prize.emoji}
-                    </div>
-                    <div class="prize-name">${prize.name}</div>
-                    `;
-            }
+            
             // 打乱奖品顺序
             const shuffledPrizes = [...prizes.filter(p => p.name !== "谢谢参与")];
             shuffledPrizes.sort(() => Math.random() - 0.5);
