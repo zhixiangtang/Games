@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸运大抽奖</title>
+    <title>幸运大抽奖 - 九宫格</title>
     <style>
         * {
             margin: 0;
@@ -122,6 +122,7 @@
             border-radius: 8px;
             margin-bottom: 8px;
             border: 2px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(45deg, #444, #666); /* 加载时的背景色 */
         }
         
         .prize-name {
@@ -143,7 +144,7 @@
             font-weight: bold;
         }
         
-        /* 中心抽奖按钮格子 - 固定位置不跳动 */
+        /* 中心抽奖按钮格子 */
         .grid-item.center-btn {
             background: linear-gradient(145deg, #FF416C, #FF4B2B);
             border: none;
@@ -157,13 +158,11 @@
             gap: 8px;
             position: relative;
             z-index: 10;
-            /* 移除transform，使用grid固定位置 */
         }
         
         .grid-item.center-btn:hover {
             background: linear-gradient(145deg, #FF4B2B, #FF416C);
             box-shadow: 0 0 30px rgba(255, 65, 108, 0.7);
-            /* 不再使用transform，避免位置跳动 */
         }
         
         .grid-item.center-btn:active {
@@ -222,6 +221,7 @@
             object-fit: cover;
             border-radius: 12px;
             border: 2px solid #FFD700;
+            background: linear-gradient(45deg, #444, #666); /* 加载时的背景色 */
         }
         
         .winner-board {
@@ -469,63 +469,63 @@
     </audio>
 
     <script>
-        // 更新奖品数据（按你的要求）
+        // 奖品数据 - 使用本地图片（需要你下载并放在同一目录）
         const prizes = [
             { 
                 id: 1, 
-                name: "iPhone 16 Pro", 
+                name: "破iPhone 17 ProMax", 
                 level: "一等奖",
-                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=300&fit=crop", 
-                probability: 3 
+                image: "prize1.jpg", // 本地图片文件名
+                probability: 0.1 
             },
             { 
                 id: 2, 
-                name: "iPad Air", 
+                name: "破iPad Air", 
                 level: "二等奖",
-                image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&h=300&fit=crop", 
-                probability: 5 
+                image: "prize2.jpg", // 本地图片文件名
+                probability: 0.3 
             },
             { 
                 id: 3, 
-                name: "智能手表", 
+                name: "破手表", 
                 level: "三等奖",
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop", 
-                probability: 8 
+                image: "prize3.jpg", // 本地图片文件名
+                probability: 0.6
             },
             { 
                 id: 4, 
-                name: "AirPods", 
+                name: "破AirPods", 
                 level: "四等奖",
-                image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=300&h=300&fit=crop", 
-                probability: 12 
+                image: "prize4.jpg", // 本地图片文件名
+                probability: 1 
             },
             { 
                 id: 5, 
-                name: "帆布包", 
+                name: "破帆布包", 
                 level: "五等奖",
-                image: "https://images.unsplash.com/photo-1566150902887-9679ecc1557a?w=300&h=300&fit=crop", 
-                probability: 15 
+                image: "prize5.jpg", // 本地图片文件名
+                probability: 3 
             },
             { 
                 id: 6, 
-                name: "奶茶", 
+                name: "破奶茶", 
                 level: "六等奖",
-                image: "https://images.unsplash.com/photo-1561121338-8c3260a09e66?w=300&h=300&fit=crop", 
-                probability: 20 
+                image: "prize6.jpg", // 本地图片文件名
+                probability: 5 
             },
             { 
                 id: 7, 
-                name: "矿泉水", 
+                name: "破矿泉水", 
                 level: "七等奖",
-                image: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=300&h=300&fit=crop", 
-                probability: 22 
+                image: "prize7.jpg", // 本地图片文件名
+                probability: 10 
             },
             { 
                 id: 8, 
                 name: "谢谢参与", 
                 level: "参与奖",
-                image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300&h=300&fit=crop", 
-                probability: 15 
+                image: "prize8.jpg", // 本地图片文件名
+                probability: 80 
             }
         ];
 
@@ -566,6 +566,7 @@
         let winners = [];
         let myHistory = [];
         let currentUser = nicknames[Math.floor(Math.random() * nicknames.length)];
+        let allImagesLoaded = false; // 图片预加载状态
         
         // 答题状态
         let quizState = {
@@ -580,7 +581,7 @@
         const elements = {
             nineGrid: document.getElementById('nineGrid'),
             startLotteryBtn: null, // 稍后动态获取
-            chanceCount: document.getElementById('chanceCount'),
+            chanceCountDisplay: null, // 稍后动态获取
             resultText: document.getElementById('resultText'),
             resultPrize: document.getElementById('resultPrize'),
             resultImage: document.getElementById('resultImage'),
@@ -601,6 +602,41 @@
             bgMusic: document.getElementById('backgroundMusic'),
             dingSound: document.getElementById('dingSound')
         };
+
+        // 预加载所有图片，确保抽奖时图片已加载完成
+        function preloadImages() {
+            const imagePromises = [];
+            const loadedImages = {};
+            
+            prizes.forEach(prize => {
+                const img = new Image();
+                const promise = new Promise((resolve, reject) => {
+                    img.onload = () => {
+                        loadedImages[prize.id] = img;
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        console.warn(`图片加载失败: ${prize.image}`);
+                        // 使用备用图片或继续加载其他图片
+                        resolve();
+                    };
+                });
+                
+                img.src = prize.image;
+                imagePromises.push(promise);
+            });
+            
+            return Promise.all(imagePromises)
+                .then(() => {
+                    console.log('所有图片预加载完成');
+                    allImagesLoaded = true;
+                    return loadedImages;
+                })
+                .catch(error => {
+                    console.error('图片预加载出错:', error);
+                    allImagesLoaded = true; // 即使有错误也继续
+                });
+        }
 
         // 初始化九宫格布局
         function initializeNineGrid() {
@@ -639,7 +675,7 @@
                     
                     gridItem.innerHTML = `
                         <div class="prize-level">${prize.level}</div>
-                        <img src="${prize.image}" alt="${prize.name}" class="prize-image">
+                        <img src="${prize.image}" alt="${prize.name}" class="prize-image" loading="lazy">
                         <div class="prize-name">${prize.name}</div>
                     `;
                 }
@@ -664,8 +700,16 @@
             }
         }
 
-        // 开始抽奖（九宫格高亮顺序）
+        // 开始抽奖（确保图片已加载）
         function startLottery() {
+            if (!allImagesLoaded) {
+                elements.resultText.textContent = "图片加载中，请稍候...";
+                setTimeout(() => {
+                    elements.resultText.textContent = "等待抽奖开始...";
+                }, 1000);
+                return;
+            }
+            
             if (isDrawing) return;
             if (remainingChances <= 0) {
                 elements.resultText.textContent = "抽奖次数已用完！点击重置次数获取更多机会";
@@ -1094,26 +1138,37 @@
 
         // 初始化
         function init() {
-            initializeNineGrid();
-            generateInitialData();
-            updateWinnerList();
-            updateHistoryDisplay();
-            
-            // 自动播放背景音乐
-            setTimeout(() => {
-                try {
-                    elements.bgMusic.volume = 0.5;
-                    elements.bgMusic.play().then(() => {
-                        isBgMusicOn = true;
-                        updateMusicButton();
-                    }).catch(e => {
-                        isBgMusicOn = false;
-                        updateMusicButton();
-                    });
-                } catch (e) {
-                    console.log("音乐播放错误:", e);
-                }
-            }, 1000);
+            // 先预加载图片
+            preloadImages().then(() => {
+                // 图片加载完成后初始化界面
+                initializeNineGrid();
+                generateInitialData();
+                updateWinnerList();
+                updateHistoryDisplay();
+                
+                // 自动播放背景音乐
+                setTimeout(() => {
+                    try {
+                        elements.bgMusic.volume = 0.5;
+                        elements.bgMusic.play().then(() => {
+                            isBgMusicOn = true;
+                            updateMusicButton();
+                        }).catch(e => {
+                            isBgMusicOn = false;
+                            updateMusicButton();
+                        });
+                    } catch (e) {
+                        console.log("音乐播放错误:", e);
+                    }
+                }, 1000);
+            }).catch(error => {
+                console.error('初始化失败:', error);
+                // 即使图片加载失败也初始化界面
+                initializeNineGrid();
+                generateInitialData();
+                updateWinnerList();
+                updateHistoryDisplay();
+            });
         }
 
         // 更新音乐按钮
